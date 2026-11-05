@@ -1,0 +1,30 @@
+# Secrets: never commit environment files (backend/.gitignore repeats this)
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Dependencies and builds
+node_modules/
+backend/vendor/
+backend/public/spa/
+backend/public/storage
+release/
+
+# Uploads, private documents, backups, logs
+backend/storage/app/public/*
+!backend/storage/app/public/.gitignore
+!backend/storage/app/public/.htaccess
+backend/storage/app/private/*
+!backend/storage/app/private/.gitignore
+backend/storage/app/backups/
+backend/storage/app/demo-content.json
+backend/storage/logs/*.log
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

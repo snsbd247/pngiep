@@ -1,0 +1,179 @@
+@import 'tailwindcss';
+
+/*
+ * Design system
+ * Brand colours come from Admin Settings > Appearance and are written to
+ * --brand-primary / --brand-secondary / --brand-accent at runtime (see SiteProvider).
+ * The full tint/shade scale is derived with color-mix, so one admin colour
+ * drives every primary-50 … primary-900 utility.
+ */
+:root {
+  --brand-primary: #1a3fa6;
+  --brand-secondary: #0b1d52;
+  --brand-accent: #1e8a3e;
+}
+
+/* Admin panel: its own purple theme (independent of the website brand colours).
+   Set on <body> so modals and toasts rendered in portals follow it too. */
+body.admin-theme {
+  --brand-primary: #4a2bd4;
+  --brand-secondary: #261a7d;
+  --brand-accent: #7b5cf0;
+  background: #f6f7fb;
+}
+
+@theme inline {
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* 1400px: the admin dashboard switches to its full desktop grid (sidebar + 4/5 columns). */
+  --breakpoint-wide: 87.5rem;
+
+  --color-primary: var(--brand-primary);
+  --color-primary-50: color-mix(in oklab, var(--brand-primary) 6%, white);
+  --color-primary-100: color-mix(in oklab, var(--brand-primary) 12%, white);
+  --color-primary-200: color-mix(in oklab, var(--brand-primary) 25%, white);
+  --color-primary-300: color-mix(in oklab, var(--brand-primary) 45%, white);
+  --color-primary-400: color-mix(in oklab, var(--brand-primary) 70%, white);
+  --color-primary-500: var(--brand-primary);
+  --color-primary-600: color-mix(in oklab, var(--brand-primary) 88%, black);
+  --color-primary-700: color-mix(in oklab, var(--brand-primary) 75%, black);
+  --color-primary-800: color-mix(in oklab, var(--brand-primary) 60%, black);
+  --color-primary-900: color-mix(in oklab, var(--brand-primary) 45%, black);
+
+  --color-secondary: var(--brand-secondary);
+  --color-secondary-700: color-mix(in oklab, var(--brand-secondary) 85%, white);
+  --color-secondary-800: var(--brand-secondary);
+  --color-secondary-900: color-mix(in oklab, var(--brand-secondary) 80%, black);
+
+  --color-accent: var(--brand-accent);
+  --color-accent-50: color-mix(in oklab, var(--brand-accent) 8%, white);
+  --color-accent-600: color-mix(in oklab, var(--brand-accent) 88%, black);
+
+  --color-lavender: color-mix(in oklab, var(--brand-primary) 5%, #f7f8fc);
+  --color-lavender-200: color-mix(in oklab, var(--brand-primary) 10%, #f4f6fc);
+  --color-ink: #0f0d1d;
+
+  --shadow-card: 0 1px 2px rgb(17 12 46 / 0.04), 0 8px 24px -6px rgb(17 12 46 / 0.08);
+  --shadow-card-hover: 0 2px 4px rgb(17 12 46 / 0.05), 0 18px 40px -10px rgb(17 12 46 / 0.16);
+  --shadow-glow: 0 10px 30px -8px color-mix(in oklab, var(--brand-primary) 55%, transparent);
+
+  --radius-card: 1rem;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-sans text-[15px] text-slate-600 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  .bg-brand-gradient {
+    background-image: linear-gradient(
+      120deg,
+      var(--color-primary-700) 0%,
+      var(--color-primary) 55%,
+      color-mix(in oklab, var(--brand-primary) 60%, var(--brand-accent)) 100%
+    );
+  }
+
+  .text-brand-gradient {
+    background-image: linear-gradient(90deg, var(--color-primary), var(--brand-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Rich text from the CMS editor */
+  .prose-content {
+    @apply text-base leading-relaxed text-slate-600;
+  }
+  .prose-content h2 {
+    @apply mt-8 mb-3 text-2xl;
+  }
+  .prose-content h3 {
+    @apply mt-6 mb-2 text-xl;
+  }
+  .prose-content p {
+    @apply mb-4;
+  }
+  .prose-content ul {
+    @apply mb-4 list-disc space-y-1 pl-6;
+  }
+  .prose-content ol {
+    @apply mb-4 list-decimal space-y-1 pl-6;
+  }
+  .prose-content a {
+    @apply font-medium text-primary underline underline-offset-2;
+  }
+  .prose-content img {
+    @apply my-6 rounded-2xl;
+  }
+  .prose-content blockquote {
+    @apply my-6 border-l-4 border-primary-300 bg-primary-50 px-5 py-3 italic;
+  }
+  .prose-content table {
+    @apply my-6 w-full border-collapse text-sm;
+  }
+  .prose-content th,
+  .prose-content td {
+    @apply border border-slate-200 px-3 py-2 text-left;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
