@@ -10,9 +10,15 @@ class TeamMemberRequest extends ContentRequest
     {
         return [
             'name' => ['required', 'string', 'max:120'],
+            'slug' => $this->slug('team_members'),
             'designation' => ['nullable', 'string', 'max:120'],
             'photo' => $this->image(),
             'bio' => ['nullable', 'string', 'max:2000'],
+            'highlights' => ['nullable', 'array', 'max:12'],
+            'highlights.*' => ['string', 'max:160'],
+            'profile' => ['nullable', 'string', 'max:100000'],
+            'message_title' => ['nullable', 'string', 'max:160'],
+            'message' => ['nullable', 'string', 'max:100000'],
             'email' => ['nullable', 'email', 'max:190'],
             'phone' => ['nullable', 'string', 'max:30'],
             'social_links' => ['nullable', 'array'],
@@ -22,6 +28,7 @@ class TeamMemberRequest extends ContentRequest
             'social_links.instagram' => ['nullable', 'url', 'max:255'],
             'social_links.whatsapp' => ['nullable', 'string', 'max:30'],
             'is_active' => ['boolean'],
+            ...$this->seo(),
         ];
     }
 }

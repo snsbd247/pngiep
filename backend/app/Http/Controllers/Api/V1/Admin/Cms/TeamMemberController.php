@@ -15,4 +15,9 @@ class TeamMemberController extends CrudController
     protected array $searchable = ['name', 'designation'];
 
     protected array $filters = ['is_active' => 'is_active'];
+
+    protected bool $hasSeo = true;
+
+    /** Profile and message are rich text (purified on save). */
+    protected array $htmlFields = ['profile', 'message'];
 }

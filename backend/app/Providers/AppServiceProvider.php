@@ -16,6 +16,7 @@ use App\Models\Role;
 use App\Models\Service;
 use App\Models\Setting;
 use App\Models\SuccessStory;
+use App\Models\TeamMember;
 use App\Models\University;
 use App\Models\User;
 use App\Services\SeoService;
@@ -55,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
             'course' => Course::class,
             'service' => Service::class,
             'success_story' => SuccessStory::class,
+            'team_member' => TeamMember::class,
             'blog' => Blog::class,
             'news' => News::class,
             'lead' => Lead::class,

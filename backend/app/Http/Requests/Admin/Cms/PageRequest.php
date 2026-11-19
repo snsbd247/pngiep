@@ -14,7 +14,7 @@ class PageRequest extends ContentRequest
     /** URL segments owned by built-in pages; a CMS page may not take them over. */
     public const RESERVED_SLUGS = [
         'admin', 'api', 'storage', 'spa', 'sanctum', 'destinations', 'universities', 'courses', 'services',
-        'success-stories', 'gallery', 'video-gallery', 'blog', 'news', 'contact', 'book-appointment', 'search', 'apply', 'appointment', 'sitemap.xml', 'robots.txt',
+        'success-stories', 'gallery', 'video-gallery', 'blog', 'news', 'team', 'contact', 'book-appointment', 'search', 'apply', 'appointment', 'sitemap.xml', 'robots.txt',
     ];
 
     public function rules(): array

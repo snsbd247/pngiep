@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\Course;
 use App\Models\Destination;
 use App\Models\News;
+use App\Models\TeamMember;
 use App\Models\Page;
 use App\Models\Service;
 use App\Models\SuccessStory;
@@ -60,6 +61,10 @@ class SitemapService
             $model::query()->published()->tap($indexable)->orderBy('id')
                 ->chunk(500, fn ($rows) => $rows->each(fn ($r) => $entries->push($entry($path($r), $r->updated_at, $priority))));
         }
+
+        // Director / team profile pages (team members use an "active" flag, not a publish status).
+        TeamMember::query()->active()->whereNotNull('slug')->tap($indexable)->orderBy('id')->get(['id', 'slug', 'updated_at'])
+            ->each(fn ($m) => $entries->push($entry("/team/{$m->slug}", $m->updated_at, '0.5')));
 
         return $entries->unique('loc')->values();
     }

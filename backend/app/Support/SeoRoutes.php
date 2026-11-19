@@ -9,6 +9,7 @@ use App\Models\News;
 use App\Models\Page;
 use App\Models\Service;
 use App\Models\SuccessStory;
+use App\Models\TeamMember;
 use App\Models\University;
 use App\Services\SeoService;
 use App\Services\SettingService;
@@ -166,6 +167,27 @@ class SeoRoutes
             ]);
 
             return self::meta($seo, $b, "{$b->title} | {$siteName()}", $b->excerpt ?: strip_tags((string) $b->content), $b->featured_image, $schema) + ['type' => 'article'];
+        });
+
+        $seo->register('#^/team/(?<slug>[a-z0-9-]+)$#', function (array $p) use ($seo, $siteName) {
+            $m = TeamMember::query()->active()->where('slug', $p['slug'])->with('seo')->first();
+            if (! $m) {
+                return null;
+            }
+            $schema = array_filter([
+                '@context' => 'https://schema.org',
+                '@type' => 'Person',
+                'name' => $m->name,
+                'jobTitle' => $m->designation,
+                'description' => $m->bio,
+                'image' => $seo->assetUrl($m->photo),
+                'url' => url("/team/{$m->slug}"),
+                'worksFor' => ['@type' => 'Organization', 'name' => $siteName()],
+                'sameAs' => array_values(array_filter([$m->social_links['linkedin'] ?? null, $m->social_links['facebook'] ?? null])) ?: null,
+            ]);
+            $title = trim($m->name.($m->designation ? " – {$m->designation}" : ''));
+
+            return self::meta($seo, $m, "{$title} | {$siteName()}", $m->bio ?: strip_tags((string) ($m->message ?: $m->profile)), $m->photo, $schema) + ['type' => 'profile'];
         });
 
         $seo->register('#^/news/(?<slug>[a-z0-9-]+)$#', function (array $p) use ($seo, $siteName) {

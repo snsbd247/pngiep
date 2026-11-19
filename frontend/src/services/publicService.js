@@ -31,6 +31,8 @@ export const directoryService = {
 export const contentService = {
   stories: list('/success-stories'),
   story: detail('/success-stories'),
+  /** Director / team member profile (with `others` for the rest of the team). */
+  teamMember: detail('/team'),
   submitStory: (payload) => http.post('/success-stories', payload),
   photos: list('/gallery/photos'),
   album: (slug) => http.get(`/gallery/albums/${slug}`).then((res) => res.data),

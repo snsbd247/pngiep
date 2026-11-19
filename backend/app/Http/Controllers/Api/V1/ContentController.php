@@ -13,6 +13,7 @@ use App\Models\GalleryImage;
 use App\Models\GalleryVideo;
 use App\Models\News;
 use App\Models\SuccessStory;
+use App\Models\TeamMember;
 use App\Services\AdminNotifier;
 use App\Support\ApiResponse;
 use App\Support\PublicCache;
@@ -312,6 +313,30 @@ class ContentController extends Controller
         }
 
         return ApiResponse::success($data, meta: PublicCache::remember('news:sidebar', fn () => $this->newsSidebar()));
+    }
+
+    // ------------------------------------------------------------ team / directors
+
+    /** Profile page of a director / team member, with the other members for "Meet the team". */
+    public function teamMember(string $slug): JsonResponse
+    {
+        $data = PublicCache::remember("team:{$slug}", function () use ($slug) {
+            $member = TeamMember::query()->active()->where('slug', $slug)->with('seo')->first();
+
+            if (! $member) {
+                return null;
+            }
+
+            return $member->makeHidden(['sort_order', 'is_active', 'created_at', 'updated_at'])->toArray() + [
+                'seo' => $member->seo?->only(['title', 'description', 'og_title', 'og_description', 'og_image', 'robots']),
+                'others' => TeamMember::query()->active()->ordered()->whereKeyNot($member->id)
+                    ->get(['id', 'name', 'slug', 'designation', 'photo', 'bio', 'social_links', 'email']),
+            ];
+        });
+
+        abort_if($data === null, 404);
+
+        return ApiResponse::success($data);
     }
 
     private function newsSidebar(): array

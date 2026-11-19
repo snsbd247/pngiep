@@ -181,25 +181,33 @@ export function VideoModal({ open, onClose, youtubeId, title }) {
   )
 }
 
+/** Director / team member card; photo and name open the profile page (/team/:slug). */
 export function TeamCard({ member }) {
   const links = member.social_links || {}
   const iconCls = 'grid size-7 place-items-center rounded-md bg-primary-50 text-primary transition hover:bg-primary hover:text-white'
+  const profile = member.slug ? `/team/${member.slug}` : null
+  const photo = member.photo ? (
+    <Image src={member.photo} alt={member.name} className="size-20 shrink-0 rounded-lg sm:size-24" />
+  ) : (
+    <span className="grid size-20 shrink-0 place-items-center rounded-lg bg-primary-50 text-2xl font-bold text-primary sm:size-24" aria-hidden="true">
+      {member.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}
+    </span>
+  )
   return (
     <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-white p-3 shadow-card">
-      {member.photo ? (
-        <Image src={member.photo} alt={member.name} className="size-20 shrink-0 rounded-lg sm:size-24" />
-      ) : (
-        <span className="grid size-20 shrink-0 place-items-center rounded-lg bg-primary-50 text-2xl font-bold text-primary sm:size-24" aria-hidden="true">
-          {member.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}
-        </span>
-      )}
+      {profile ? <Link to={profile} tabIndex={-1} aria-hidden="true" className="shrink-0">{photo}</Link> : photo}
       <div className="min-w-0">
-        <h3 className="truncate text-[15px] font-semibold">{member.name}</h3>
+        <h3 className="truncate text-[15px] font-semibold">{profile ? <Link to={profile} className="hover:text-primary">{member.name}</Link> : member.name}</h3>
         {member.designation && <p className="text-xs text-slate-500">{member.designation}</p>}
-        <div className="mt-3 flex gap-1.5">
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
           {links.linkedin && <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className={iconCls} aria-label="LinkedIn"><SocialIcon name="linkedin" className="size-3.5" /></a>}
           {links.whatsapp && <a href={whatsappHref(links.whatsapp)} target="_blank" rel="noopener noreferrer" className={iconCls} aria-label="WhatsApp"><MessageCircle className="size-3.5" /></a>}
           {member.email && <a href={`mailto:${member.email}`} className={iconCls} aria-label="Email"><Mail className="size-3.5" /></a>}
+          {profile && (
+            <Link to={profile} className="ml-1 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">
+              View Profile <ArrowRight className="size-3.5" />
+            </Link>
+          )}
         </div>
       </div>
     </div>

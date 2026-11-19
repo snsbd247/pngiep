@@ -55,6 +55,7 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('blogs/{slug}', [ContentController::class, 'blog'])->where('slug', $slug);
     Route::get('news', [ContentController::class, 'news']);
     Route::get('news/{slug}', [ContentController::class, 'newsItem'])->where('slug', $slug);
+    Route::get('team/{slug}', [ContentController::class, 'teamMember'])->where('slug', $slug);
 
     // Appointments, contact, applications (Phase 5)
     Route::get('appointments/options', [AppointmentController::class, 'options']);

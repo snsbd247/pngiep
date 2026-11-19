@@ -134,7 +134,7 @@ class ContentBlocks
     public function team(?int $limit = null): array
     {
         return TeamMember::query()->active()->ordered()->when($limit, fn ($q) => $q->limit($limit))
-            ->get(['id', 'name', 'designation', 'photo', 'bio', 'social_links'])->toArray();
+            ->get(['id', 'name', 'slug', 'designation', 'photo', 'bio', 'social_links'])->toArray();
     }
 
     public function timeline(): array

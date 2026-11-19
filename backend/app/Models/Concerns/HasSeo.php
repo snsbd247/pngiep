@@ -9,7 +9,10 @@ trait HasSeo
 {
     public static function bootHasSeo(): void
     {
-        static::forceDeleted(fn ($model) => $model->seo()->delete());
+        // forceDeleted only exists on soft-deleting models; plain models are handled in `deleted`.
+        if (method_exists(static::class, 'forceDeleted')) {
+            static::forceDeleted(fn ($model) => $model->seo()->delete());
+        }
         static::deleted(function ($model) {
             if (! method_exists($model, 'isForceDeleting')) {
                 $model->seo()->delete();
