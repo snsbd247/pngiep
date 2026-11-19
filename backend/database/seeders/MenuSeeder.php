@@ -18,7 +18,11 @@ class MenuSeeder extends Seeder
         $menus = [
             'header' => ['Main navigation', [
                 ['Home', '/'],
-                ['About Us', 'page:about'],
+                ['About', 'page:about', [
+                    ['About Us', 'page:about'],
+                    ['Services', '/services'],
+                    ['Gallery', '/gallery'],
+                ]],
                 ['Destinations', '/destinations', [
                     ['All Destinations', '/destinations'],
                     ['Study in India', '/study-in-india'],
@@ -30,9 +34,7 @@ class MenuSeeder extends Seeder
                     ['Find a Course', '/courses'],
                     ['Scholarships', 'page:scholarships'],
                 ]],
-                ['Services', '/services'],
                 ['Success Stories', '/success-stories'],
-                ['Gallery', '/gallery'],
                 ['Blog', '/blog'],
                 ['News', '/news'],
                 ['Contact', '/contact'],

@@ -1,6 +1,6 @@
 # Database: আর্কিটেকচার
 
-> সর্বশেষ আপডেট: 2026-11-19 · উৎস: `backend/database/migrations` (১৫টা ফাইল) · ইঞ্জিন: MySQL 8 / MariaDB 10.4+ (টেস্টে in-memory SQLite)
+> সর্বশেষ আপডেট: 2026-11-20 · উৎস: `backend/database/migrations` (২৩টা ফাইল) · ইঞ্জিন: MySQL 8 / MariaDB 10.4+ (টেস্টে in-memory SQLite)
 
 ## ১. ডিজাইনের নিয়ম
 
@@ -47,7 +47,7 @@
 | `homepage_statistics` | group, label, value, suffix, icon, description |
 | `team_members` | name, **slug (U)**, designation, photo, bio, **highlights (json), profile (html), message_title, message (html)**, email, phone, social_links (json), sort_order, is_active; SEO `seo_meta`-তে। প্রোফাইল পেজ `/team/{slug}` |
 | `timeline_items` | সাল-ভিত্তিক মাইলস্টোন |
-| `partners`, `testimonials` | featured, status, category / rating, country_code |
+| `partners`, `testimonials` | featured, status, category / rating, country_code. বিশ্ববিদ্যালয় এখানে রাখা হয় না: logo strip সরাসরি `universities` পড়ে (২০২৬-১১-২০) |
 | `faqs` | question, answer, category, page_key, faqable (nullable morph) |
 | `newsletter_subscribers` | email (U), name, status, ip_address |
 

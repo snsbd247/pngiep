@@ -1,6 +1,6 @@
 # UI: ডিজাইন প্ল্যান
 
-> সর্বশেষ আপডেট: 2026-11-19 · কোড: `frontend/src`
+> সর্বশেষ আপডেট: 2026-11-20 · কোড: `frontend/src`
 
 ## ১. ডিজাইন নীতি
 
@@ -35,8 +35,8 @@
 |---|---|
 | `ui/` | Button, Badge, Modal, ConfirmDialog, Toast, Pagination, SearchBar, Image, AppIcon, Flag, Lightbox, HighlightText, SmartLink, SocialIcon, States |
 | `forms/` | FormField, FormInput, FormTextarea, FormSelect, FormSwitch, FileUploader, ImageField |
-| `layout/` | TopBar, Navbar (dropdown, সার্চ, মোবাইল drawer), Footer, Breadcrumb, SiteLogo, SocialLinks, PublicLayout |
-| `sections/` | HeroBanner, SectionHeader, CTASection, Carousel, FAQAccordion, NewsletterBar, PartnerLogoSlider, StatsBar |
+| `layout/` | TopBar, Navbar (dropdown, সার্চ, মোবাইল drawer; মেনু Admin › Menus থেকে: Home · About ▾ · Destinations ▾ · Universities ▾ · Success Stories · Blog · News · Contact), Footer, Breadcrumb, SiteLogo, SocialLinks, PublicLayout |
+| `sections/` | HeroBanner, SectionHeader, CTASection, Carousel, FAQAccordion, NewsletterBar, PartnerLogoSlider (ভার্সিটির লোগো Universities থেকে, ভার্সিটির পেজে লিংক), StatsBar |
 | `blocks/` | PageBlocks (CMS ব্লক রেন্ডারার), shared (FeatureGrid, PhotoGrid, QuoteCarousel, SplitChecklist) |
 | `cards/`, `directory/` | Team/Video কার্ড, University/Course কার্ড, FilterSidebar, ListingLayout, EnquiryForm, SidebarCards |
 | `content/`, `public/` | ContentWidgets, StoryForm, BookingWidgets, FormControls |

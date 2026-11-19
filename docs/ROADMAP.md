@@ -99,3 +99,5 @@ a successful production build and its acceptance checklist signed off.
       sign-out of other sessions on password change, lead details not overwritten by public forms,
       deleted applications + documents erased after 90 days, ordered backup dump, JSON 401 for guest API calls
 - [x] Tests: NewsTest, YouTubeEmbedTest, WebmailTest, FacebookAutoPostTest, TeamProfileTest, HardeningTest (115 tests total)
+- [x] Course schema with fee, duration and credential; demo content confirmed as final data (2026-11-19)
+- [x] Header menu: About dropdown (About Us, Services, Gallery) and News; "Universities We Represent" reads Universities (duplicate university partners merged); all docs moved to `docs/` and kept off the server (2026-11-20). 123 tests total

@@ -95,4 +95,27 @@ class NewsTest extends TestCase
             $this->assertSame(array_search('/blog', $urls) + 1, array_search('/news', $urls), $location);
         }
     }
+
+    public function test_header_menu_groups_about_us_services_and_gallery_under_about(): void
+    {
+        $this->seed(\Database\Seeders\MenuSeeder::class);
+        $header = fn () => $this->getJson('/api/v1/site')->assertOk()->json('data.menus.header.items');
+
+        // Fresh install: the seeder already builds the group.
+        $this->assertSame(['Home', 'About', 'Destinations', 'Universities', 'Success Stories', 'Blog', 'News', 'Contact'], array_column($header(), 'label'));
+
+        // Existing site with the old flat menu: the migration groups it, once.
+        $migration = require database_path('migrations/2026_11_20_000001_group_about_menu.php');
+        $migration->down();
+        $this->assertContains('Services', array_column($header(), 'label'));
+        $migration->up();
+        $migration->up();
+
+        $items = $header();
+        $this->assertSame('About', $items[1]['label']);
+        $this->assertSame('/about', $items[1]['url']);
+        $this->assertSame(['About Us', 'Services', 'Gallery'], array_column($items[1]['children'], 'label'));
+        $this->assertNotContains('Services', array_column($items, 'label'));
+        $this->assertSame(1, count(array_keys(array_column($items, 'label'), 'About')));
+    }
 }

@@ -15,8 +15,9 @@ the 6 authorised universities, scholarship requirements and services.
 - [ ] Confirm the public email (website uses `pngiepstudiesabroad2526@gmail.com`; the summary lists `pngiepadmissions@studyabroad.com`)
 - [ ] Directors' photos and consultation hours: Content › Team Members, Business › Counsellors (default Mon–Fri 9:00–12:00, 13:00–16:00)
 - [ ] University details: city, logo, website, fees, courses, scholarships: Directory › Universities / Courses
-- [ ] Partner logos: Content › Partners
-- [ ] Replace the demo courses / fees, success stories, testimonials, gallery and blog posts, then run `php artisan app:demo-content remove`
+- [x] University logos in "Universities We Represent": taken from Directory › Universities (Partners is only for non-university partners)
+- [x] Courses / fees, success stories, testimonials, gallery and blog posts: confirmed by the company as final data (2026-11-19); `app:demo-content remove` no longer touches them
+- [ ] Header menu: Home · About (About Us, Services, Gallery) · Destinations · Universities · Success Stories · Blog · News · Contact, dropdowns work on desktop and mobile
 - [x] Social share image (1200×630) generated from the logo: Settings › SEO
 - [ ] Privacy policy and terms reviewed by the company: Website › Pages
 - [ ] Social media profile links: Settings › Social (placeholder links are not used in search data)

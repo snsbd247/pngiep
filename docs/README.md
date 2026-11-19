@@ -20,7 +20,8 @@ is hard-coded in the frontend.
 ```
 backend/    Laravel API, admin API, SPA shell with server-rendered SEO tags
 frontend/   React app (public website + admin panel, code-split)
-docs/       Roadmap (6 phases), architecture & API notes
+docs/       All documentation (this README, plan, architecture, deployment, admin manual, SEO, …)
+scripts/    build-release.ps1 (cPanel release zip)
 ```
 
 ## Local development
@@ -80,19 +81,21 @@ cd frontend && npm run lint && npm run build
 powershell -ExecutionPolicy Bypass -File scripts\build-release.ps1   # → release\riths-<date>.zip
 ```
 
-First install: upload the zip to cPanel and follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+First install: upload the zip to cPanel and follow [DEPLOYMENT.md](DEPLOYMENT.md).
 Updates: copy the changed files, then `php artisan migrate --force` and rebuild the caches
 (section 11 of DEPLOYMENT.md). Take a backup first (`php artisan app:backup`).
+Documentation never goes to the server: everything is in `docs/` (outside `backend/`), and the release zip
+and update packages also leave out any `*.md` file.
 
 Live site: https://pngiep.com (cPanel, `~/riths` + `~/public_html`). Code: https://github.com/snsbd247/pngiep (`main`).
 
 ## Docs
 
-- [docs/ROADMAP.md](docs/ROADMAP.md): six-phase delivery plan and status
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): design decisions, database, API, security
-- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): cPanel deployment, cron, SMTP, HTTPS, updates, backups, troubleshooting
-- [docs/ADMIN_MANUAL.md](docs/ADMIN_MANUAL.md): guide for office staff
-- [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md): pre-launch and regression checklist
-- [docs/SEO.md](docs/SEO.md): what the site does for SEO and what the company should do (Bangla)
+- [ROADMAP.md](ROADMAP.md): six-phase delivery plan and status
+- [ARCHITECTURE.md](ARCHITECTURE.md): design decisions, database, API, security
+- [DEPLOYMENT.md](DEPLOYMENT.md): cPanel deployment, cron, SMTP, HTTPS, updates, backups, troubleshooting
+- [ADMIN_MANUAL.md](ADMIN_MANUAL.md): guide for office staff
+- [QA_CHECKLIST.md](QA_CHECKLIST.md): pre-launch and regression checklist
+- [SEO.md](SEO.md): what the site does for SEO and what the company should do (Bangla)
 - [Plan.md](Plan.md), [UI.md](UI.md), [Database.md](Database.md), [development.md](development.md),
   [chathistory.md](chathistory.md): project plan, design, database, development history and chat log (Bangla)

@@ -1,6 +1,6 @@
 # Plan: PNG International Education Portal (PNGIEP)
 
-> সর্বশেষ আপডেট: 2026-11-19 · রিপো: `snsbd247/pngiep` · ব্রাঞ্চ: `main`
+> সর্বশেষ আপডেট: 2026-11-20 · রিপো: `snsbd247/pngiep` · ব্রাঞ্চ: `main`
 
 ## ১. প্রজেক্টের উদ্দেশ্য
 
@@ -31,7 +31,7 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 7. **ডাবল বুকিং ঠেকানো**: counsellor row lock, তারপর slot পুনরায় যাচাই, আর শেষে `appointments_slot_unique` DB index।
 8. **ছবি**: WebP-তে রূপান্তর, সর্বোচ্চ 2000px, থাম্বনেইল তৈরি। SVG আপলোড নিষিদ্ধ।
 
-বিস্তারিত: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · ডাটাবেজ: [Database.md](Database.md) · ডিজাইন: [UI.md](UI.md)
+বিস্তারিত: [ARCHITECTURE.md](ARCHITECTURE.md) · ডাটাবেজ: [Database.md](Database.md) · ডিজাইন: [UI.md](UI.md)
 
 ## ৪. মডিউল তালিকা
 
@@ -54,11 +54,12 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 | 5 | Appointments, leads, applications, contact, email templates | ✅ |
 | 6 | Security, SEO (sitemap), পারফরম্যান্স, backup, release script, ডকুমেন্টেশন, ব্র্যান্ডিং | ✅ |
 
-প্রতিটি ফেজের চেকলিস্ট: [docs/ROADMAP.md](docs/ROADMAP.md)
+প্রতিটি ফেজের চেকলিস্ট: [ROADMAP.md](ROADMAP.md)
 
-## ৬. বর্তমান অবস্থা (2026-11-19, দিনের শেষে)
+## ৬. বর্তমান অবস্থা (2026-11-20)
 
-- Backend টেস্ট: **১১৫টি পাস, ৭৯৮টি assertion** (সকালের রিভিউতে ছিল ৮৬টি)
+- Backend টেস্ট: **১২৩টি পাস, ৮৭২টি assertion** (১৯ নভেম্বর সকালের রিভিউতে ছিল ৮৬টি)
+- ডকুমেন্টেশন: সব `.md` ফাইল `docs/` ফোল্ডারে (README সহ; GitHub `docs/README.md` দেখায়); সার্ভারে ডেপ্লয় হয় না
 - Frontend: `npm run build` সফল; `npm run lint`-এ **০টি error** (warning শুধু আগের ফাইলগুলোতে)
 - Git: `snsbd247/pngiep` › `main`, প্রতিটা ফিচার আলাদা কমিটে
 - লাইভ: https://pngiep.com (cPanel সার্ভার 169.40.116.146-এ মাইগ্রেট হয়েছে); লোকাল: `F:\Lovable\xampp` (Apache/MySQL Windows সার্ভিস), `localhost/riths`
@@ -70,14 +71,14 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 বিস্তারিত কারণ আর ফাইলের লোকেশন [development.md](development.md)-এর "কোড রিভিউ" অংশে আছে।
 
 ### অগ্রাধিকার ১: নিরাপত্তা
-- [x] **`trustProxies(at: '*')` ঠিক করা** ✅ ২০২৬-১১-১৯ ([backend/bootstrap/app.php:33](backend/bootstrap/app.php#L33))। এখন যে কেউ `X-Forwarded-For` হেডার পাঠিয়ে IP বদলাতে পারে, ফলে login brute-force limiter আর public form limiter বাইপাস হয়। সমাধান: `.env`-এ `TRUSTED_PROXIES` রেখে শুধু আসল proxy/Cloudflare-এর IP trust করা।
-- [x] **`analytics_head_code` admin পেজে না বসানো** ✅ ২০২৬-১১-১৯ (দুটোই: `/admin`-এ বসে না + শুধু Super Admin বদলাতে পারে) ([backend/app/Services/SeoService.php:98](backend/app/Services/SeoService.php#L98))। `settings.manage` থাকা Admin এখানে JS বসালে সেটা Super Admin-এর ব্রাউজারেও চলবে, ফলে "Admin roles বদলাতে পারে না" সীমাটা আর কাজ করে না। সমাধান: `/admin` পাথে স্কিপ করা, এবং/অথবা এই সেটিং শুধু Super Admin-এর জন্য রাখা।
+- [x] **`trustProxies(at: '*')` ঠিক করা** ✅ ২০২৬-১১-১৯ ([backend/bootstrap/app.php:33](../backend/bootstrap/app.php#L33))। এখন যে কেউ `X-Forwarded-For` হেডার পাঠিয়ে IP বদলাতে পারে, ফলে login brute-force limiter আর public form limiter বাইপাস হয়। সমাধান: `.env`-এ `TRUSTED_PROXIES` রেখে শুধু আসল proxy/Cloudflare-এর IP trust করা।
+- [x] **`analytics_head_code` admin পেজে না বসানো** ✅ ২০২৬-১১-১৯ (দুটোই: `/admin`-এ বসে না + শুধু Super Admin বদলাতে পারে) ([backend/app/Services/SeoService.php:98](../backend/app/Services/SeoService.php#L98))। `settings.manage` থাকা Admin এখানে JS বসালে সেটা Super Admin-এর ব্রাউজারেও চলবে, ফলে "Admin roles বদলাতে পারে না" সীমাটা আর কাজ করে না। সমাধান: `/admin` পাথে স্কিপ করা, এবং/অথবা এই সেটিং শুধু Super Admin-এর জন্য রাখা।
 - [x] **পাসওয়ার্ড বদলালে অন্য সব সেশন লগআউট করা** ✅ ২০২৬-১১-১৯ (Profile এবং Users → edit)।
 
 ### অগ্রাধিকার ২: ডেটা ও প্রাইভেসি
 - [x] **ছাত্রদের ডকুমেন্ট মোছার ব্যবস্থা।** ✅ ২০২৬-১১-১৯ (মোছা আবেদন ৯০ দিন পর ফাইলসহ স্থায়ীভাবে মুছে যায়) Application soft-delete হয় কিন্তু ফাইল কখনো মোছে না; `model:prune` শিডিউল করা থাকলেও কোনো model `Prunable` নয়। একটা retention policy ঠিক করে (যেমন ৯০ দিন পর) force-delete আর ফাইল মোছা দরকার।
-- [x] **Lead overwrite আটকানো** ✅ ২০২৬-১১-১৯ ([backend/app/Services/LeadService.php:36](backend/app/Services/LeadService.php#L36))। কারও ইমেইল দিয়ে public form সাবমিট করলে তার খোলা lead-এর নাম/ফোন বদলে যায়। নতুন তথ্য শুধু `meta.history`-তে রাখা উচিত।
-- [x] **Backup dump-এ `ORDER BY` যোগ করা** ✅ ২০২৬-১১-১৯ ([backend/app/Console/Commands/BackupCommand.php:77](backend/app/Console/Commands/BackupCommand.php#L77))। ORDER BY ছাড়া `LIMIT/OFFSET` হলে বড় টেবিলে row বাদ পড়তে বা ডুপ্লিকেট হতে পারে।
+- [x] **Lead overwrite আটকানো** ✅ ২০২৬-১১-১৯ ([backend/app/Services/LeadService.php:36](../backend/app/Services/LeadService.php#L36))। কারও ইমেইল দিয়ে public form সাবমিট করলে তার খোলা lead-এর নাম/ফোন বদলে যায়। নতুন তথ্য শুধু `meta.history`-তে রাখা উচিত।
+- [x] **Backup dump-এ `ORDER BY` যোগ করা** ✅ ২০২৬-১১-১৯ ([backend/app/Console/Commands/BackupCommand.php:77](../backend/app/Console/Commands/BackupCommand.php#L77))। ORDER BY ছাড়া `LIMIT/OFFSET` হলে বড় টেবিলে row বাদ পড়তে বা ডুপ্লিকেট হতে পারে।
 
 ### অগ্রাধিকার ৩: পারফরম্যান্স ও কোয়ালিটি
 - [ ] `AppIcon` (lucide `DynamicIcon`)-এর icon map চাঙ্ক ৩৫৮ KB (gzip ৬২ KB), হোমপেজেও লোড হয়। শুধু ব্যবহৃত আইকনগুলোর একটা ছোট map বানানো যায়।
@@ -130,4 +131,10 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 
 ### ৮.৭ CSP ও SEO ✅ (২০২৬-১১-১৯)
 - Content-Security-Policy: প্রতি request-এ nonce + strict-dynamic (কমিট `3fd1f5c`)।
-- টেকনিক্যাল SEO ঠিক করা ও কোম্পানির করণীয়: [docs/SEO.md](docs/SEO.md)।
+- টেকনিক্যাল SEO ঠিক করা ও কোম্পানির করণীয়: [SEO.md](SEO.md)।
+- কোর্স পেজের Course schema-য় ফি, সময়কাল, ডিগ্রি; "ডেমো" কনটেন্ট কোম্পানি চূড়ান্ত ডাটা হিসেবে নিশ্চিত করেছে (মোছা হবে না)।
+
+### ৮.৮ মেনু, বিশ্ববিদ্যালয়ের লোগো ও ডকুমেন্টেশন ✅ (২০২৬-১১-২০)
+- হেডার মেনু: Home · **About** (About Us, Services, Gallery) · Destinations · Universities · Success Stories · Blog · **News** · Contact। ফুটারের Quick Links-এও News।
+- "Universities We Represent" (About ও হোম) এখন সরাসরি **Universities** থেকে আসে (লোগো + ভার্সিটির পেজের লিংক)। Partners-এ রাখা একই ৬টা ভার্সিটির লোগোহীন কপি মুছে দেওয়া হয়েছে; Partners শুধু অন্য ধরনের পার্টনারের জন্য।
+- সব `.md` ফাইল `docs/`-এ; Laravel-এর ডিফল্ট `backend/README.md` মুছে দেওয়া; ডেপ্লয় ও release zip-এ কোনো `.md` যায় না।

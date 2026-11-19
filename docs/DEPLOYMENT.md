@@ -270,6 +270,10 @@ Upload the new zip and extract it **over** `/home/USER/riths`, letting it replac
 `public/spa` folder and `public/index.php` into `public_html` again, then re-apply the
 `$appPath` edit.
 
+Only application files go to the server. The documentation lives in `docs/` (not part of
+`backend/`), and the release zip / update packages skip every `*.md` file, so nothing from the
+docs is ever uploaded.
+
 ```bash
 php artisan migrate --force
 php artisan optimize:clear && php artisan optimize

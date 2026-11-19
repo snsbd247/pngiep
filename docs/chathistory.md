@@ -42,7 +42,7 @@
 
 ---
 
-## সেশন: 2026-11-05 থেকে 2026-11-19 (সার্ভার সিঙ্ক, ফিচার, ডেপ্লয়)
+## সেশন: 2026-11-05 থেকে 2026-11-20 (সার্ভার সিঙ্ক, ফিচার, ডেপ্লয়)
 
 > এই সেশনের কথোপকথনের সংক্ষিপ্ত রেকর্ড। পাসওয়ার্ড, টোকেন বা অন্য গোপন তথ্য এখানে ইচ্ছা করে রাখা হয়নি।
 
@@ -58,5 +58,12 @@
 | 8 | cPanel API টোকেন Claude নিজে বানাবে | `pngiep-app` টোকেন তৈরি, সরাসরি সার্ভারের `.env`-এ (কোথাও প্রিন্ট হয়নি); আসল cPanel-এ মেইলবক্স চেক যাচাই |
 | 9 | Meet the Directors-এর প্রত্যেকের প্রোফাইল পেজ | `/team/{slug}`; ডিরেক্টরদের বাণী/প্রোফাইল কোম্পানিকে Admin থেকে লিখতে হবে |
 | 10 | "যা যা করা লাগবে করেন", সব md আপডেট, তারপর পুরো সিকিউরিটি অ্যানালাইসিস | রিভিউয়ের সমাধান, সব ডকুমেন্ট আপডেট, রিপোর্ট `docs/SECURITY_REPORT.md` (শুধু লোকালে); পাওয়া Webmail-এর ফাঁক ঠিক করা |
+| 11 | 2FA লাগবে না, CSP করে দেওয়া | nonce + strict-dynamic CSP, headless Chrome-এ ০টা CSP error |
+| 12 | SEO, Search Console-এর "Couldn't fetch" ও "Indexing request rejected" | canonical/JSON-LD React-এ মুছে যাওয়া আর robots.txt-এ API বন্ধ থাকা ঠিক করা; breadcrumbs, LocalBusiness, title; গাইড [SEO.md](SEO.md) |
+| 13 | "ডেমো যে গুলো আছে এইগুলোই ফাইনাল ডাটা" | ডেমো চিহ্ন সরানো (আর মোছা যাবে না), Course schema-য় ফি/সময়কাল/ডিগ্রি |
+| 14 | মেনুতে News কই? | হেডার আর ফুটারে Blog-এর পরে News |
+| 15 | About পেজে ভার্সিটির লোগো নেই; "২টাই একই জিনিস, একসাথে করেন" | "Universities We Represent" সরাসরি Universities থেকে; Partners-এর ডুপ্লিকেট মোছা |
+| 16 | মেনু: About › About Us, Service, Gallery | হেডারে About dropdown (About Us, Services, Gallery) |
+| 17 | সব .md ফাইল docs ফোল্ডারে, আপডেট, GitHub-এ push, cPanel-এ ডক ডেপ্লয় না করা | সব `.md` `docs/`-এ, লিংক ঠিক, ডেপ্লয় প্যাকেজ ও release zip থেকে `*.md` বাদ |
 
 যা Claude করতে পারেনি বা করেনি: Facebook Meta App তৈরি (ইউজারের Facebook অ্যাকাউন্ট লাগে); ডিরেক্টরদের আসল তথ্য লেখা (বানিয়ে লেখা হবে না)।

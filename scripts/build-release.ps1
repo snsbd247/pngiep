@@ -6,7 +6,7 @@
   Output: release\riths-<date>.zip containing the Laravel app with
   - the compiled React site in public\spa
   - production-only Composer packages (vendor)
-  - no .env, tests, logs, uploads or backups
+  - no .env, tests, logs, uploads, backups or documentation (*.md)
   See docs\DEPLOYMENT.md for the upload steps.
 #>
 $ErrorActionPreference = 'Stop'
@@ -29,7 +29,7 @@ robocopy (Join-Path $root 'backend') $stage /E /NFL /NDL /NJH /NJS /NP `
   /XD vendor node_modules tests .git .idea .vscode `
       "$root\backend\storage\logs" "$root\backend\storage\app\backups" "$root\backend\storage\pail" `
       "$root\backend\storage\framework\cache\data" "$root\backend\storage\framework\sessions" "$root\backend\storage\framework\views" `
-  /XF .env .env.backup .env.production .phpunit.result.cache phpunit.xml *.log demo-content.json `
+  /XF .env .env.backup .env.production .phpunit.result.cache phpunit.xml *.log *.md demo-content.json `
   | Out-Null
 if ($LASTEXITCODE -ge 8) { throw "robocopy failed ($LASTEXITCODE)" }
 # Uploaded media / private documents never ship with a release.

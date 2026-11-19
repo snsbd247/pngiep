@@ -1,11 +1,11 @@
 # Development: ডেভেলপমেন্ট হিস্টোরি
 
-> সর্বশেষ আপডেট: 2026-11-19
+> সর্বশেষ আপডেট: 2026-11-20
 
 ## ১. উৎস ও সীমাবদ্ধতা
 
 - Git-এ মাত্র **একটা কমিট** আছে: `68571d9 Initial commit: PNGIEP education portal (Laravel API + React SPA)` (লেখক: `snsbd247`)। পুরো কোডবেস একসাথে কমিট করা হয়েছে, তাই প্রতিটি ফিচার কবে যোগ হয়েছে তার git-ইতিহাস নেই।
-- নিচের ফেজভিত্তিক ইতিহাস নেওয়া হয়েছে [docs/ROADMAP.md](docs/ROADMAP.md), মাইগ্রেশন ফাইল, `release/` ফোল্ডারের zip আর ফাইলের তারিখ থেকে। ফেজগুলোর সঠিক তারিখ জানা নেই।
+- নিচের ফেজভিত্তিক ইতিহাস নেওয়া হয়েছে [ROADMAP.md](ROADMAP.md), মাইগ্রেশন ফাইল, `release/` ফোল্ডারের zip আর ফাইলের তারিখ থেকে। ফেজগুলোর সঠিক তারিখ জানা নেই।
 - এখন থেকে প্রতিটি পরিবর্তন এই ফাইলের শেষে "লগ" অংশে তারিখসহ যোগ করা উচিত।
 
 ## ২. ফেজভিত্তিক ইতিহাস
@@ -84,15 +84,15 @@
 
 | # | গুরুত্ব | সমস্যা | লোকেশন |
 |---|---|---|---|
-| 1 | উচ্চ | `trustProxies(at: '*')`: `X-Forwarded-For` জাল করে login rate limit (৫/মিনিট প্রতি ইমেইল+IP, ২০/মিনিট প্রতি IP) আর public-form limit বাইপাস করা যায়। লগ ও lead-এ IP-ও ভুল আসে। | [backend/bootstrap/app.php:33](backend/bootstrap/app.php#L33) |
-| 2 | উচ্চ | `analytics_head_code` কাঁচা HTML হিসেবে `/admin`-সহ সব পেজে বসে। Admin রোলের (`settings.manage` আছে) কেউ JS বসালে সেটা Super Admin-এর সেশনে চলবে এবং roles বদলাতে পারবে। ফলে "Admin roles ম্যানেজ করতে পারে না" সীমাটা অকার্যকর হয়ে যায়। | [backend/app/Services/SeoService.php:98](backend/app/Services/SeoService.php#L98) |
-| 3 | মাঝারি | ছাত্রদের ডকুমেন্ট (পাসপোর্ট ইত্যাদি) কখনো মোছা হয় না: application soft-delete হয়, কিন্তু কোনো model `Prunable` নয়, তাই `model:prune` কিছুই করে না। | `Application` model, [backend/routes/console.php:21](backend/routes/console.php#L21) |
-| 4 | মাঝারি | পাবলিক ফর্মে অন্য কারও ইমেইল দিলে তার খোলা lead-এর নাম/ফোন বদলে যায়, ফলে CRM ভুল নম্বরে কল করতে পারে। | [backend/app/Services/LeadService.php:36](backend/app/Services/LeadService.php#L36) |
-| 5 | মাঝারি | পাসওয়ার্ড বদলালে (profile বা admin user edit) অন্য ডিভাইসের সেশন লগআউট হয় না। | [backend/app/Http/Controllers/Api/V1/Admin/ProfileController.php:33](backend/app/Http/Controllers/Api/V1/Admin/ProfileController.php#L33), `UserController::update` |
-| 6 | নিম্ন | Backup dump-এ `LIMIT/OFFSET` আছে কিন্তু `ORDER BY` নেই, তাই row বাদ পড়তে বা ডুপ্লিকেট হতে পারে। | [backend/app/Console/Commands/BackupCommand.php:77](backend/app/Console/Commands/BackupCommand.php#L77) |
+| 1 | উচ্চ | `trustProxies(at: '*')`: `X-Forwarded-For` জাল করে login rate limit (৫/মিনিট প্রতি ইমেইল+IP, ২০/মিনিট প্রতি IP) আর public-form limit বাইপাস করা যায়। লগ ও lead-এ IP-ও ভুল আসে। | [backend/bootstrap/app.php:33](../backend/bootstrap/app.php#L33) |
+| 2 | উচ্চ | `analytics_head_code` কাঁচা HTML হিসেবে `/admin`-সহ সব পেজে বসে। Admin রোলের (`settings.manage` আছে) কেউ JS বসালে সেটা Super Admin-এর সেশনে চলবে এবং roles বদলাতে পারবে। ফলে "Admin roles ম্যানেজ করতে পারে না" সীমাটা অকার্যকর হয়ে যায়। | [backend/app/Services/SeoService.php:98](../backend/app/Services/SeoService.php#L98) |
+| 3 | মাঝারি | ছাত্রদের ডকুমেন্ট (পাসপোর্ট ইত্যাদি) কখনো মোছা হয় না: application soft-delete হয়, কিন্তু কোনো model `Prunable` নয়, তাই `model:prune` কিছুই করে না। | `Application` model, [backend/routes/console.php:21](../backend/routes/console.php#L21) |
+| 4 | মাঝারি | পাবলিক ফর্মে অন্য কারও ইমেইল দিলে তার খোলা lead-এর নাম/ফোন বদলে যায়, ফলে CRM ভুল নম্বরে কল করতে পারে। | [backend/app/Services/LeadService.php:36](../backend/app/Services/LeadService.php#L36) |
+| 5 | মাঝারি | পাসওয়ার্ড বদলালে (profile বা admin user edit) অন্য ডিভাইসের সেশন লগআউট হয় না। | [backend/app/Http/Controllers/Api/V1/Admin/ProfileController.php:33](../backend/app/Http/Controllers/Api/V1/Admin/ProfileController.php#L33), `UserController::update` |
+| 6 | নিম্ন | Backup dump-এ `LIMIT/OFFSET` আছে কিন্তু `ORDER BY` নেই, তাই row বাদ পড়তে বা ডুপ্লিকেট হতে পারে। | [backend/app/Console/Commands/BackupCommand.php:77](../backend/app/Console/Commands/BackupCommand.php#L77) |
 | 7 | নিম্ন (পারফ) | `AppIcon`-এর icon map চাঙ্ক ৩৫৮ KB / gzip ৬২ KB, পাবলিক পেজে লোড হয়; `forms` চাঙ্ক (১৩৬ KB) সব পেজে preload হয়। | `frontend/src/components/ui/AppIcon.jsx`, `vite.config.js` |
 | 8 | নিম্ন | README-তে `scriptsuild-release.ps1` / `releaseiths-<date>.zip`: `\b` আর `\r` escape হয়ে backslash হারিয়েছে। | [README.md](README.md) |
-| 9 | নিম্ন | ROADMAP-এ টেস্টের সংখ্যা (৭৮) পুরোনো, আসলে ৮৬টা। | [docs/ROADMAP.md](docs/ROADMAP.md) |
+| 9 | নিম্ন | ROADMAP-এ টেস্টের সংখ্যা (৭৮) পুরোনো, আসলে ৮৬টা। | [ROADMAP.md](ROADMAP.md) |
 
 সমাধানের পরিকল্পনা: [Plan.md › পরবর্তী পরিকল্পনা](Plan.md)
 
@@ -112,7 +112,9 @@
 | 2026-11-19 | **রিভিউয়ের সমাধান** (#1–#6, #8, #9) + লগইন ছাড়া admin API-তে JSON 401। HardeningTest (৬টা)। মোট ১১৫টা টেস্ট পাস। |
 | 2026-11-19 | `df916ff` **সিকিউরিটি অ্যানালাইসিস**: Webmail-এর ফাঁক ঠিক (বিদ্যমান মেইলবক্স যুক্ত/মোছা শুধু Super Admin), npm audit fix, সার্ভারে `.env` 600। রিপোর্ট `docs/SECURITY_REPORT.md` (লোকাল)। মোট ১১৬টা টেস্ট। |
 | 2026-11-19 | **Content-Security-Policy**: nonce + strict-dynamic (Vite `html.cspNonce`, `CspNonce`), analytics snippet-এ nonce, Webmail-এর `form-action` বাগ ঠিক। headless Chrome-এ যাচাই। মোট ১১৭টা টেস্ট। |
-| 2026-11-19 | **SEO**: React আর canonical/JSON-LD মুছে দেয় না (আগে Google এগুলো দেখত না), সব পেজে BreadcrumbList, LocalBusiness + PostalAddress, title ৬০ অক্ষরে (`seo_short_name`), `/search` noindex, ফাইল-ঠিকানায় 404, sitemap-এ হোমপেজ lastmod ও cookie ছাড়া উত্তর। গাইড: [docs/SEO.md](docs/SEO.md)। মোট ১১৯টা টেস্ট। |
+| 2026-11-19 | **SEO**: React আর canonical/JSON-LD মুছে দেয় না (আগে Google এগুলো দেখত না), সব পেজে BreadcrumbList, LocalBusiness + PostalAddress, title ৬০ অক্ষরে (`seo_short_name`), `/search` noindex, ফাইল-ঠিকানায় 404, sitemap-এ হোমপেজ lastmod ও cookie ছাড়া উত্তর। গাইড: [SEO.md](SEO.md)। মোট ১১৯টা টেস্ট। |
+| 2026-11-19 | `99fc2c6` robots.txt পাবলিক API (`/api/v1/`) খোলা রাখে (Google রেন্ডার করতে পারত না, "Indexing request rejected")। `b6ddb52` Course schema-য় ফি/সময়কাল/ডিগ্রি; ডেমো কনটেন্ট চূড়ান্ত ডাটা হিসেবে চিহ্নমুক্ত। মোট ১২০টা টেস্ট। |
+| 2026-11-20 | `74bc785` মেনুতে **News** (হেডার + ফুটার)। `f6ea132` "Universities We Represent" সরাসরি Universities থেকে (লোগো + লিংক); Partners-এর ডুপ্লিকেট ভার্সিটি migration দিয়ে মোছা। হেডারে **About** dropdown (About Us, Services, Gallery)। সব `.md` `docs/`-এ, ডেপ্লয়ে বাদ। মোট ১২৩টা টেস্ট। |
 
 ### রিভিউয়ের সমস্যাগুলোর বর্তমান অবস্থা (৩ নম্বর অংশের টেবিল অনুযায়ী)
 
