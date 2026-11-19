@@ -14,6 +14,10 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     base: mode === 'production' ? '/spa/' : '/',
+    // Content-Security-Policy: Vite puts this placeholder as nonce="…" on every script / preload
+    // tag in index.html (and a <meta property="csp-nonce"> its lazy-chunk loader reads); Laravel
+    // replaces it with a fresh random nonce per request (SpaController + App\Support\CspNonce).
+    html: mode === 'production' ? { cspNonce: 'CSP_NONCE_PLACEHOLDER' } : undefined,
     resolve: {
       alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     },

@@ -111,6 +111,7 @@
 | 2026-11-19 | `99aa3b4` **ডিরেক্টর প্রোফাইল** `/team/{slug}`; `HasSeo` soft-delete ছাড়া মডেলেও কাজ করে। TeamProfileTest (৩টা)। ডেপ্লয় হয়েছে। |
 | 2026-11-19 | **রিভিউয়ের সমাধান** (#1–#6, #8, #9) + লগইন ছাড়া admin API-তে JSON 401। HardeningTest (৬টা)। মোট ১১৫টা টেস্ট পাস। |
 | 2026-11-19 | `df916ff` **সিকিউরিটি অ্যানালাইসিস**: Webmail-এর ফাঁক ঠিক (বিদ্যমান মেইলবক্স যুক্ত/মোছা শুধু Super Admin), npm audit fix, সার্ভারে `.env` 600। রিপোর্ট `docs/SECURITY_REPORT.md` (লোকাল)। মোট ১১৬টা টেস্ট। |
+| 2026-11-19 | **Content-Security-Policy**: nonce + strict-dynamic (Vite `html.cspNonce`, `CspNonce`), analytics snippet-এ nonce, Webmail-এর `form-action` বাগ ঠিক। headless Chrome-এ যাচাই। মোট ১১৭টা টেস্ট। |
 
 ### রিভিউয়ের সমস্যাগুলোর বর্তমান অবস্থা (৩ নম্বর অংশের টেবিল অনুযায়ী)
 

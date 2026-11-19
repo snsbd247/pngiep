@@ -63,15 +63,18 @@ class SeoTest extends TestCase
 
     public function test_security_headers_are_sent(): void
     {
-        $this->get('/')->assertHeader('X-Content-Type-Options', 'nosniff')
+        $csp = $this->get('/')->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
-            ->assertHeader('Content-Security-Policy', "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'");
+            ->headers->get('Content-Security-Policy');
+        foreach (["default-src 'self'", "'strict-dynamic'", "object-src 'none'", "base-uri 'self'", "form-action 'self'", "frame-ancestors 'self'"] as $directive) {
+            $this->assertStringContainsString($directive, $csp);
+        }
+        $this->assertStringNotContainsString('upgrade-insecure-requests', $csp);
         $this->getJson('/api/v1/site')->assertHeader('X-Content-Type-Options', 'nosniff');
 
         // HTTPS-only headers.
         $this->get('/')->assertHeaderMissing('Strict-Transport-Security')->assertHeaderMissing('Cross-Origin-Opener-Policy');
-        $this->get('https://localhost/')->assertHeader('Cross-Origin-Opener-Policy', 'same-origin')
-            ->assertHeader('Strict-Transport-Security')
-            ->assertHeader('Content-Security-Policy', "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests");
+        $https = $this->get('https://localhost/')->assertHeader('Cross-Origin-Opener-Policy', 'same-origin')->assertHeader('Strict-Transport-Security');
+        $this->assertStringEndsWith('; upgrade-insecure-requests', $https->headers->get('Content-Security-Policy'));
     }
 }

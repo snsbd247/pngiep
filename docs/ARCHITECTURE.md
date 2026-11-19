@@ -118,3 +118,6 @@ CORS restricted to configured origins · no secrets in the frontend bundle.
   public forms no longer overwrite an open lead's name/phone (kept in `meta.history[].submitted`); deleted applications
   and their documents are pruned after 90 days (`Application::prunable`); backup dump ordered by primary key;
   guest API calls always get JSON 401.
+- **Content-Security-Policy** (`SecurityHeaders`, `App\Support\CspNonce`): `script-src 'nonce-<random per request>' 'strict-dynamic'`;
+  Vite writes a nonce placeholder on every script / preload tag (`html.cspNonce`), `SpaController` replaces it, and the analytics
+  snippet's `<script>` tags get the nonce too. `form-action` also allows the cPanel Webmail host.

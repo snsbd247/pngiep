@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\CspNonce;
 use Illuminate\Support\Str;
 
 /**
@@ -98,7 +99,8 @@ class SeoService
         // Admin-entered snippet (Settings > SEO; only a Super Admin can change it). Never on the
         // admin panel itself, where a script could act with the signed-in user's session.
         if (! ($meta['is_admin'] ?? false) && ($analytics = $this->settings->get('analytics_head_code'))) {
-            $tags[] = $analytics;
+            // Its <script> tags get the request's CSP nonce, so the snippet may run (and load more).
+            $tags[] = app(CspNonce::class)->addTo($analytics);
         }
 
         return implode("\n    ", $tags);

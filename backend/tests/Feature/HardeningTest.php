@@ -57,6 +57,36 @@ class HardeningTest extends TestCase
         $this->assertSame('<script>window.gtag=2</script>', app(SettingService::class)->get('analytics_head_code'));
     }
 
+    public function test_content_security_policy_uses_a_per_request_nonce_on_every_script(): void
+    {
+        config(['services.cpanel.webmail_url' => 'https://mail.example.test:2096']);
+        app(SettingService::class)->update(['analytics_head_code' => '<script async src="https://www.googletagmanager.com/gtag/js?id=G-X"></script><script>gtag()</script>']);
+
+        $first = $this->get('/');
+        $csp = $first->headers->get('Content-Security-Policy');
+        preg_match("/'nonce-([^']+)'/", $csp, $m);
+        $nonce = $m[1] ?? '';
+
+        $this->assertNotSame('', $nonce);
+        $this->assertStringContainsString("'strict-dynamic'", $csp);
+        $this->assertStringContainsString("object-src 'none'", $csp);
+        $this->assertStringContainsString("form-action 'self' https://mail.example.test:2096", $csp);
+
+        $html = $first->getContent();
+        $this->assertStringNotContainsString('CSP_NONCE_PLACEHOLDER', $html);
+        preg_match_all('/<script\b[^>]*>/i', $html, $tags);
+        foreach ($tags[0] as $tag) {
+            if (str_contains($tag, 'application/ld+json')) {
+                continue; // data, not executed
+            }
+            $this->assertStringContainsString('nonce="'.$nonce.'"', $tag, "script without the nonce: {$tag}");
+        }
+
+        $this->app->forgetScopedInstances(); // a real next request runs in a fresh PHP process
+        preg_match("/'nonce-([^']+)'/", $this->get('/')->headers->get('Content-Security-Policy'), $m2);
+        $this->assertNotSame($nonce, $m2[1], 'a new nonce for every request');
+    }
+
     public function test_public_forms_do_not_overwrite_an_open_leads_name_or_phone(): void
     {
         $lead = Lead::query()->create(['name' => 'Real Name', 'email' => 'real@example.com', 'phone' => '+675 1111 1111', 'source' => 'contact_form', 'status' => 'new']);

@@ -6,6 +6,7 @@ use App\Services\SeoService;
 use App\Services\SitemapService;
 use App\Services\SettingService;
 use Illuminate\Http\RedirectResponse;
+use App\Support\CspNonce;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -30,8 +31,14 @@ class SpaController extends Controller
         // Support installs in a sub-folder (e.g. http://localhost/riths): prefix built asset
         // URLs and tell the SPA its base path (used for routing, API calls and lazy chunks).
         $base = rtrim($request->getBaseUrl(), '/');
-        $boot = '<script>window.__APP_BASE__='.json_encode($base, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES).'</script>';
-        $html = str_replace(['"/spa/', '<!--app-head-->'], ['"'.$base.'/spa/', $boot."\n    ".$seo->renderHead($meta)], $template);
+        // Every script carries this request's CSP nonce (Vite writes a placeholder into the build).
+        $nonce = app(CspNonce::class)->value();
+        $boot = '<script nonce="'.$nonce.'">window.__APP_BASE__='.json_encode($base, JSON_HEX_TAG | JSON_UNESCAPED_SLASHES).'</script>';
+        $html = str_replace(
+            ['"/spa/', '<!--app-head-->', CspNonce::PLACEHOLDER],
+            ['"'.$base.'/spa/', $boot."\n    ".$seo->renderHead($meta), $nonce],
+            $template,
+        );
 
         return response($html, $meta['status'] ?? 200)
             ->header('Content-Type', 'text/html; charset=UTF-8')

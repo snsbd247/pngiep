@@ -17,6 +17,7 @@ use App\Models\Service;
 use App\Models\Setting;
 use App\Models\SuccessStory;
 use App\Models\TeamMember;
+use App\Support\CspNonce;
 use App\Models\University;
 use App\Models\User;
 use App\Services\SeoService;
@@ -38,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(SettingService::class);
+        // One CSP nonce per request (header + every <script> on the page share it).
+        $this->app->scoped(CspNonce::class);
         $this->app->singleton(SeoService::class);
         $this->app->afterResolving(SeoService::class, fn (SeoService $seo) => SeoRoutes::register($seo));
     }

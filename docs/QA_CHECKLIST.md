@@ -83,6 +83,7 @@ the 6 authorised universities, scholarship requirements and services.
 - [ ] (auto) Analytics code is not rendered on `/admin`; only a Super Admin can change it
 - [ ] (auto) Changing a password signs out the user's other sessions
 - [ ] (auto) Only YouTube iframes survive in rich text
+- [ ] (auto) CSP: `script-src 'nonce-…' 'strict-dynamic'`, a new nonce per request on every script; no CSP errors in the browser console (home, news, team, contact, gallery, admin login checked)
 - [ ] cPanel API token and Facebook Page token are not visible anywhere in the admin panel or API responses
 - [ ] `composer audit` and `npm audit` report no vulnerabilities
 - [ ] Seed admin password changed; staff use individual accounts
