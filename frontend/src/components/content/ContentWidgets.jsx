@@ -179,7 +179,7 @@ export function CategoryList({ title, options = [], allLabel, allCount, value, o
   )
 }
 
-export function PopularPosts({ title, posts = [] }) {
+export function PopularPosts({ title, posts = [], basePath = '/blog' }) {
   if (!posts.length) return null
   return (
     <section className="rounded-2xl border border-slate-100 bg-lavender p-5">
@@ -187,7 +187,7 @@ export function PopularPosts({ title, posts = [] }) {
       <ul className="space-y-4">
         {posts.map((p) => (
           <li key={p.id}>
-            <Link to={`/blog/${p.slug}`} className="group flex gap-3">
+            <Link to={`${basePath}/${p.slug}`} className="group flex gap-3">
               <Image src={p.featured_image} alt="" className="size-16 shrink-0 rounded-lg" />
               <span className="min-w-0">
                 <span className="line-clamp-2 text-sm font-medium text-ink group-hover:text-primary">{p.title}</span>

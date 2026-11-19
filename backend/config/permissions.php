@@ -33,6 +33,7 @@ return [
         'faqs' => ['faqs.manage' => 'Manage FAQs'],
         'gallery' => ['gallery.manage' => 'Manage photo & video gallery'],
         'blogs' => ['blogs.manage' => 'Manage blog & notices'],
+        'news' => ['news.manage' => 'Manage news'],
         'counsellors' => ['counsellors.manage' => 'Manage counsellors & availability'],
         'appointments' => [
             'appointments.view' => 'View appointments',
@@ -59,7 +60,7 @@ return [
                 'dashboard.view', 'media.manage', 'menus.manage', 'pages.manage', 'homepage.manage',
                 'destinations.manage', 'universities.manage', 'courses.manage', 'services.manage',
                 'success_stories.manage', 'testimonials.manage', 'partners.manage', 'faqs.manage',
-                'gallery.manage', 'blogs.manage',
+                'gallery.manage', 'blogs.manage', 'news.manage',
             ],
         ],
         'counsellor' => [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\News;
 use App\Models\Course;
 use App\Models\Destination;
 use App\Models\Page;
@@ -51,6 +52,10 @@ class SearchController extends Controller
                 ->where(fn ($w) => $w->where('title', 'like', $like)->orWhere('excerpt', 'like', $like))
                 ->latest('published_at')->limit(self::PER_GROUP)->get(['id', 'title', 'slug', 'featured_image', 'excerpt'])
                 ->map(fn ($b) => ['id' => $b->id, 'title' => $b->title, 'text' => $b->excerpt, 'image' => $b->featured_image, 'url' => "/blog/{$b->slug}"]),
+            'news' => News::query()->published()
+                ->where(fn ($w) => $w->where('title', 'like', $like)->orWhere('excerpt', 'like', $like))
+                ->latest('published_at')->limit(self::PER_GROUP)->get(['id', 'title', 'slug', 'featured_image', 'excerpt'])
+                ->map(fn ($n) => ['id' => $n->id, 'title' => $n->title, 'text' => $n->excerpt, 'image' => $n->featured_image, 'url' => "/news/{$n->slug}"]),
             'pages' => Page::query()->published()->where('template', '!=', 'listing')
                 ->where(fn ($w) => $w->where('title', 'like', $like)->orWhere('subtitle', 'like', $like)->orWhere('excerpt', 'like', $like))
                 ->limit(self::PER_GROUP)->get(['id', 'title', 'slug', 'subtitle', 'banner_image'])

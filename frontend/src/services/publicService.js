@@ -38,6 +38,9 @@ export const contentService = {
   blogs: list('/blogs'),
   /** Resolves to the full envelope: data = post, meta = sidebar (categories, popular posts). */
   blog: (slug) => http.get(`/blogs/${slug}`),
+  news: list('/news'),
+  /** Resolves to the full envelope: data = article, meta = sidebar (popular news). */
+  newsItem: (slug) => http.get(`/news/${slug}`),
 }
 
 export const bookingService = {

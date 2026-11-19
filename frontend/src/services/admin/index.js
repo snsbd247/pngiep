@@ -59,7 +59,7 @@ export const menuService = {
 
 /** CRUD services for content modules, keyed by API path segment. */
 export const contentServices = Object.fromEntries(
-  ['homepage-sections', 'hero-slides', 'statistics', 'team-members', 'timeline-items', 'pages', 'services', 'partners', 'testimonials', 'faqs', 'destinations', 'universities', 'courses', 'success-stories', 'gallery-albums', 'gallery-videos', 'gallery-categories', 'blogs', 'blog-categories', 'counsellors', 'email-templates', 'page-categories', 'destination-categories', 'story-categories', 'partner-categories', 'faq-categories', 'degree-types', 'intakes', 'blog-tags'].map((key) => [
+  ['homepage-sections', 'hero-slides', 'statistics', 'team-members', 'timeline-items', 'pages', 'services', 'partners', 'testimonials', 'faqs', 'destinations', 'universities', 'courses', 'success-stories', 'gallery-albums', 'gallery-videos', 'gallery-categories', 'blogs', 'news', 'blog-categories', 'counsellors', 'email-templates', 'page-categories', 'destination-categories', 'story-categories', 'partner-categories', 'faq-categories', 'degree-types', 'intakes', 'blog-tags'].map((key) => [
     key,
     createCrudService(`/admin/${key}`),
   ]),

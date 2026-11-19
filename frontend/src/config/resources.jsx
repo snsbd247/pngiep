@@ -650,6 +650,45 @@ export const resources = {
     ],
   },
 
+  news: {
+    title: 'News',
+    singular: 'news article',
+    permission: 'news.manage',
+    sortable: false,
+    searchable: true,
+    presets: [
+      { params: { state: 'draft' }, title: 'Draft News' },
+      { params: { state: 'scheduled' }, title: 'Scheduled News', description: 'Published articles with a future date; they go live automatically.' },
+      { params: { state: 'published' }, title: 'Published News' },
+    ],
+    view: (r) => `/news/${r.slug}`,
+    filters: [
+      { name: 'status', label: 'Any status', options: [{ value: 'published', label: 'Published' }, { value: 'draft', label: 'Draft' }] },
+    ],
+    columns: [
+      { key: 'featured_image', header: 'Image', type: 'image' },
+      { key: 'title', header: 'Title' },
+      { key: 'published_at', header: 'Published', render: (r) => (r.published_at ? new Date(r.published_at).toLocaleDateString() + (new Date(r.published_at) > new Date() ? ' (scheduled)' : '') : '—') },
+      { key: 'views_count', header: 'Views' },
+      { key: 'is_featured', header: 'Featured', type: 'featured' },
+      { key: 'status', header: 'Status', type: 'status' },
+    ],
+    fields: [
+      { name: 'title', label: 'Title', type: 'text', required: true },
+      { name: 'slug', label: 'URL slug', type: 'text', help: 'Leave empty to generate from the title.' },
+      { name: 'excerpt', label: 'Short description', type: 'textarea', help: 'Shown on cards and in search results.' },
+      { name: 'content', label: 'Content', type: 'html' },
+      { name: 'source_name', label: 'Source name (optional)', type: 'text', help: 'E.g. a newspaper or university, if this news comes from elsewhere.' },
+      { name: 'source_url', label: 'Source link (optional)', type: 'text', placeholder: 'https://…' },
+      STATUS,
+      { name: 'published_at', label: 'Publish date', type: 'datetime', side: true, help: 'Empty = now. A future date schedules the article.' },
+      { name: 'author_name', label: 'Author name', type: 'text', side: true },
+      FEATURED(),
+      { name: 'featured_image', label: 'Featured image', type: 'image', side: true, folder: 'news' },
+      SEO,
+    ],
+  },
+
   'blog-categories': {
     title: 'Blog Categories',
     singular: 'category',

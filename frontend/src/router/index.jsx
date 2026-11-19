@@ -25,6 +25,8 @@ const GalleryPage = lazy(() => import('@/pages/public/content/GalleryPage'))
 const VideoGalleryPage = lazy(() => import('@/pages/public/content/VideoGalleryPage'))
 const BlogPage = lazy(() => import('@/pages/public/content/BlogPage'))
 const BlogDetailPage = lazy(() => import('@/pages/public/content/BlogDetailPage'))
+const NewsPage = lazy(() => import('@/pages/public/content/NewsPage'))
+const NewsDetailPage = lazy(() => import('@/pages/public/content/NewsDetailPage'))
 const BookAppointmentPage = lazy(() => import('@/pages/public/business/BookAppointmentPage'))
 const ManageAppointmentPage = lazy(() => import('@/pages/public/business/ManageAppointmentPage'))
 const ContactPage = lazy(() => import('@/pages/public/business/ContactPage'))
@@ -86,6 +88,8 @@ export const router = createBrowserRouter([
           { path: 'gallery/videos', element: <VideoGalleryPage /> },
           { path: 'blog', element: <BlogPage /> },
           { path: 'blog/:slug', element: <BlogDetailPage /> },
+          { path: 'news', element: <NewsPage /> },
+          { path: 'news/:slug', element: <NewsDetailPage /> },
           { path: 'search', element: <SearchPage /> },
           { path: 'book-appointment', element: <BookAppointmentPage /> },
           { path: 'appointment/:token', element: <ManageAppointmentPage /> },

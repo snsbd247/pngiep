@@ -113,9 +113,10 @@ export function SuccessQuoteCard({ story }) {
   )
 }
 
-export function BlogCard({ post }) {
+/** Article card for blog posts and news (`basePath` sets the link prefix). */
+export function BlogCard({ post, basePath = '/blog' }) {
   return (
-    <Link to={`/blog/${post.slug}`} className={cardBase}>
+    <Link to={`${basePath}/${post.slug}`} className={cardBase}>
       <div className="relative">
         <Image src={post.featured_image} alt={post.title} className="aspect-[16/10] w-full transition duration-500 group-hover:scale-105" />
         {post.category && <span className="absolute top-3 left-3 rounded-md bg-white px-2.5 py-1 text-[11px] font-semibold text-primary shadow">{post.category.name}</span>}

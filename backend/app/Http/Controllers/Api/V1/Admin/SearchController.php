@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Appointment;
 use App\Models\Blog;
+use App\Models\News;
 use App\Models\ContactMessage;
 use App\Models\Course;
 use App\Models\Destination;
@@ -62,6 +63,7 @@ class SearchController extends Controller
             ['Universities', 'universities.manage', University::class, 'name', 'universities'],
             ['Courses', 'courses.manage', Course::class, 'name', 'courses'],
             ['Blog / Notice', 'blogs.manage', Blog::class, 'title', 'blogs'],
+            ['News', 'news.manage', News::class, 'title', 'news'],
             ['Pages', 'pages.manage', Page::class, 'title', 'pages'],
         ];
         foreach ($content as [$label, $permission, $model, $column, $resource]) {

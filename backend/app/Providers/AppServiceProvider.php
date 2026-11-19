@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Destination;
 use App\Models\Lead;
 use App\Models\Media;
+use App\Models\News;
 use App\Models\Page;
 use App\Models\Role;
 use App\Models\Service;
@@ -55,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
             'service' => Service::class,
             'success_story' => SuccessStory::class,
             'blog' => Blog::class,
+            'news' => News::class,
             'lead' => Lead::class,
             'appointment' => Appointment::class,
             'application' => Application::class,

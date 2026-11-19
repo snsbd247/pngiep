@@ -11,6 +11,7 @@ use App\Models\GalleryAlbum;
 use App\Models\GalleryCategory;
 use App\Models\GalleryImage;
 use App\Models\GalleryVideo;
+use App\Models\News;
 use App\Models\SuccessStory;
 use App\Services\AdminNotifier;
 use App\Support\ApiResponse;
@@ -30,6 +31,8 @@ class ContentController extends Controller
         'course_name', 'study_level', 'year', 'quote', 'excerpt', 'youtube_id'];
 
     private const POST_CARD = ['id', 'blog_category_id', 'destination_id', 'type', 'title', 'slug', 'featured_image', 'excerpt', 'published_at', 'views_count', 'author_name'];
+
+    private const NEWS_CARD = ['id', 'title', 'slug', 'featured_image', 'excerpt', 'published_at', 'views_count', 'author_name', 'source_name'];
 
     // ------------------------------------------------------------ success stories
 
@@ -249,6 +252,68 @@ class ContentController extends Controller
     }
 
     /** Category tabs with counts + popular posts (shared by list and detail). */
+    // ------------------------------------------------------------ news
+
+    public function news(Request $request): JsonResponse
+    {
+        $params = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'sort' => ['nullable', 'in:latest,oldest,popular'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:48'],
+        ]);
+
+        $query = News::query()->published()
+            ->when($params['search'] ?? null, fn ($q, $s) => $q->where(fn ($w) => $w->where('title', 'like', "%{$s}%")->orWhere('excerpt', 'like', "%{$s}%")));
+
+        match ($params['sort'] ?? 'latest') {
+            'oldest' => $query->orderBy('published_at'),
+            'popular' => $query->orderByDesc('views_count')->orderByDesc('published_at'),
+            default => $query->orderByDesc('published_at')->orderByDesc('id'),
+        };
+
+        $page = $query->paginate($params['per_page'] ?? 9, self::NEWS_CARD);
+
+        return $this->paginated($page, PublicCache::remember('news:sidebar', fn () => $this->newsSidebar()));
+    }
+
+    public function newsItem(Request $request, string $slug): JsonResponse
+    {
+        $data = PublicCache::remember("news:{$slug}", function () use ($slug) {
+            $item = News::query()->published()->where('slug', $slug)->with('seo')->first();
+
+            if (! $item) {
+                return null;
+            }
+
+            $words = str_word_count(strip_tags((string) $item->content));
+
+            return $item->makeHidden(['status', 'deleted_at', 'created_at', 'author_id'])->toArray() + [
+                'reading_minutes' => max(1, (int) ceil($words / 200)),
+                'seo' => $item->seo?->only(['title', 'description', 'og_title', 'og_description', 'og_image', 'robots']),
+                'related' => News::query()->published()->whereKeyNot($item->id)
+                    ->orderByDesc('published_at')->orderByDesc('id')->limit(3)->get(self::NEWS_CARD),
+            ];
+        });
+
+        abort_if($data === null, 404);
+
+        // Count one view per visitor per article every 6 hours (outside the cached payload).
+        if (Cache::add("news-view:{$data['id']}:".sha1((string) $request->ip()), true, now()->addHours(6))) {
+            News::query()->whereKey($data['id'])->increment('views_count');
+        }
+
+        return ApiResponse::success($data, meta: PublicCache::remember('news:sidebar', fn () => $this->newsSidebar()));
+    }
+
+    private function newsSidebar(): array
+    {
+        return [
+            'all_count' => News::query()->published()->count(),
+            'popular' => News::query()->published()->orderByDesc('views_count')->orderByDesc('published_at')->limit(4)
+                ->get(['id', 'title', 'slug', 'featured_image', 'published_at']),
+        ];
+    }
+
     private function blogSidebar(): array
     {
         return [

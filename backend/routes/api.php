@@ -53,6 +53,8 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
     Route::get('gallery/videos', [ContentController::class, 'videos']);
     Route::get('blogs', [ContentController::class, 'blogs']);
     Route::get('blogs/{slug}', [ContentController::class, 'blog'])->where('slug', $slug);
+    Route::get('news', [ContentController::class, 'news']);
+    Route::get('news/{slug}', [ContentController::class, 'newsItem'])->where('slug', $slug);
 
     // Appointments, contact, applications (Phase 5)
     Route::get('appointments/options', [AppointmentController::class, 'options']);
@@ -172,6 +174,9 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
                 Route::crud('blog-categories', Admin\Content\BlogCategoryController::class);
                 Route::crud('blog-tags', Admin\Content\BlogTagController::class);
                 Route::crud('blogs', Admin\Content\BlogController::class);
+            });
+            Route::middleware('can:news.manage')->group(function () {
+                Route::crud('news', Admin\Content\NewsController::class);
             });
 
             // ------------------------------------------------ Business (Phase 5)

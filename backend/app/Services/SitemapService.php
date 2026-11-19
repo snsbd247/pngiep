@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Blog;
 use App\Models\Course;
 use App\Models\Destination;
+use App\Models\News;
 use App\Models\Page;
 use App\Models\Service;
 use App\Models\SuccessStory;
@@ -53,6 +54,7 @@ class SitemapService
             [Service::class, fn ($r) => "/services/{$r->slug}", '0.8'],
             [SuccessStory::class, fn ($r) => "/success-stories/{$r->slug}", '0.5'],
             [Blog::class, fn ($r) => "/blog/{$r->slug}", '0.6'],
+            [News::class, fn ($r) => "/news/{$r->slug}", '0.6'],
         ];
         foreach ($sources as [$model, $path, $priority]) {
             $model::query()->published()->tap($indexable)->orderBy('id')

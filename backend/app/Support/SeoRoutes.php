@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Blog;
 use App\Models\Course;
 use App\Models\Destination;
+use App\Models\News;
 use App\Models\Page;
 use App\Models\Service;
 use App\Models\SuccessStory;
@@ -32,6 +33,7 @@ class SeoRoutes
         'success-stories' => 'Success Stories',
         'gallery' => 'Gallery',
         'blog' => 'Blog & Notice',
+        'news' => 'News',
         'contact' => 'Contact Us',
         'book-appointment' => 'Book Appointment',
         'search' => 'Search',
@@ -164,6 +166,27 @@ class SeoRoutes
             ]);
 
             return self::meta($seo, $b, "{$b->title} | {$siteName()}", $b->excerpt ?: strip_tags((string) $b->content), $b->featured_image, $schema) + ['type' => 'article'];
+        });
+
+        $seo->register('#^/news/(?<slug>[a-z0-9-]+)$#', function (array $p) use ($seo, $siteName) {
+            $n = News::query()->published()->where('slug', $p['slug'])->with('seo')->first();
+            if (! $n) {
+                return null;
+            }
+            $schema = array_filter([
+                '@context' => 'https://schema.org',
+                '@type' => 'NewsArticle',
+                'headline' => Str::limit($n->title, 110, ''),
+                'description' => $n->excerpt,
+                'image' => $seo->assetUrl($n->seo?->og_image ?: $n->featured_image),
+                'datePublished' => $n->published_at?->toIso8601String(),
+                'dateModified' => $n->updated_at?->toIso8601String(),
+                'author' => ['@type' => 'Person', 'name' => $n->author_name ?: $siteName()],
+                'publisher' => ['@type' => 'Organization', 'name' => $siteName()],
+                'mainEntityOfPage' => url("/news/{$n->slug}"),
+            ]);
+
+            return self::meta($seo, $n, "{$n->title} | {$siteName()}", $n->excerpt ?: strip_tags((string) $n->content), $n->featured_image, $schema) + ['type' => 'article'];
         });
 
         // Single-segment URLs: CMS pages (about, privacy-policy, built-in list pages …).

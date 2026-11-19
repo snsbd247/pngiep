@@ -10,7 +10,7 @@ import Image from '@/components/ui/Image'
 import { EmptyState, ErrorState, LoadingSkeleton } from '@/components/ui/States'
 import { publicService } from '@/services/publicService'
 
-const GROUP_TITLES = { destinations: 'Destinations', universities: 'Universities', courses: 'Courses', services: 'Services', success_stories: 'Success Stories', blog: 'Blog & Notices', pages: 'Pages' }
+const GROUP_TITLES = { destinations: 'Destinations', universities: 'Universities', courses: 'Courses', services: 'Services', success_stories: 'Success Stories', blog: 'Blog & Notices', news: 'News', pages: 'Pages' }
 
 export default function SearchPage() {
   const [params, setParams] = useSearchParams()

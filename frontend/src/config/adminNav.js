@@ -14,6 +14,7 @@ import {
   LayoutList,
   LogOut,
   Mail,
+  Megaphone,
   MessageCircle,
   Newspaper,
   Settings,
@@ -134,6 +135,13 @@ export const adminNav = [
       { label: 'Categories', to: '/admin/content/blog-categories', permission: 'blogs.manage' },
       { label: 'Tags', to: '/admin/content/blog-tags', permission: 'blogs.manage' },
       ...status('/admin/content/blogs?state=', 'blogs.manage', [['Drafts', 'draft'], ['Scheduled', 'scheduled'], ['Published', 'published']]),
+    ],
+  },
+  {
+    label: 'News', icon: Megaphone, children: [
+      { label: 'All News', to: '/admin/content/news', permission: 'news.manage' },
+      { label: 'Add News', to: '/admin/content/news/new', permission: 'news.manage' },
+      ...status('/admin/content/news?state=', 'news.manage', [['Drafts', 'draft'], ['Scheduled', 'scheduled'], ['Published', 'published']]),
     ],
   },
   {
