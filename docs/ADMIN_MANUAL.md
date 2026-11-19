@@ -16,6 +16,9 @@ Notifications, Activity Log, Profile and Logout.
 - Each section manages its own categories. Examples: *Pages › Page Categories*, *Courses › Degree Types / Intakes*
   and *Partners › Partner Categories*. Renaming a category updates every record that uses it.
 - You only see the menu items your role is allowed to use.
+- **Universities We Represent** (About page and homepage logo strip) comes straight from **Universities**: add or
+  change a university, its logo and order there. **Partners** is only for other partners (agencies, airlines,
+  organisations). The **News** link in the website menu is under **Menus**, like the other links.
 - **Notifications** (the bell, top right) lists new enquiries, bookings, applications, messages and
   story submissions. Under *Notifications › Notification Settings* you choose which types you receive.
 - **Settings › System Settings** (Admins) shows the site's health and lets you clear caches and make backups.
