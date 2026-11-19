@@ -56,32 +56,35 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 
 প্রতিটি ফেজের চেকলিস্ট: [docs/ROADMAP.md](docs/ROADMAP.md)
 
-## ৬. বর্তমান অবস্থা (2026-11-19-এর রিভিউ অনুযায়ী)
+## ৬. বর্তমান অবস্থা (2026-11-19, দিনের শেষে)
 
-- Backend টেস্ট: **৮৬টি পাস, ৬২২টি assertion** (`php artisan test`, XAMPP PHP 8.2.12 দিয়ে চালানো)
-- Frontend: `npm run build` সফল; `npm run lint`-এ **০টি error**, প্রায় ৪০টি warning
-- Git: শুধু একটা কমিট (`68571d9 Initial commit`)
+- Backend টেস্ট: **১১৫টি পাস, ৭৯৮টি assertion** (সকালের রিভিউতে ছিল ৮৬টি)
+- Frontend: `npm run build` সফল; `npm run lint`-এ **০টি error** (warning শুধু আগের ফাইলগুলোতে)
+- Git: `snsbd247/pngiep` › `main`, প্রতিটা ফিচার আলাদা কমিটে
+- লাইভ: https://pngiep.com (cPanel সার্ভার 169.40.116.146-এ মাইগ্রেট হয়েছে); লোকাল: `F:\Lovable\xampp` (Apache/MySQL Windows সার্ভিস), `localhost/riths`
+- নতুন ফিচার: News, YouTube embed, Webmail (cPanel টোকেন বসানো, চালু), Facebook auto-post (Meta App সেটআপ বাকি), ডিরেক্টর প্রোফাইল
+- সিকিউরিটি অ্যানালাইসিস রিপোর্ট: [docs/SECURITY_REPORT.md](docs/SECURITY_REPORT.md)
 
 ## ৭. পরবর্তী পরিকল্পনা: রিভিউ থেকে পাওয়া কাজ (অগ্রাধিকার অনুযায়ী)
 
 বিস্তারিত কারণ আর ফাইলের লোকেশন [development.md](development.md)-এর "কোড রিভিউ" অংশে আছে।
 
 ### অগ্রাধিকার ১: নিরাপত্তা
-- [ ] **`trustProxies(at: '*')` ঠিক করা** ([backend/bootstrap/app.php:33](backend/bootstrap/app.php#L33))। এখন যে কেউ `X-Forwarded-For` হেডার পাঠিয়ে IP বদলাতে পারে, ফলে login brute-force limiter আর public form limiter বাইপাস হয়। সমাধান: `.env`-এ `TRUSTED_PROXIES` রেখে শুধু আসল proxy/Cloudflare-এর IP trust করা।
-- [ ] **`analytics_head_code` admin পেজে না বসানো** ([backend/app/Services/SeoService.php:98](backend/app/Services/SeoService.php#L98))। `settings.manage` থাকা Admin এখানে JS বসালে সেটা Super Admin-এর ব্রাউজারেও চলবে, ফলে "Admin roles বদলাতে পারে না" সীমাটা আর কাজ করে না। সমাধান: `/admin` পাথে স্কিপ করা, এবং/অথবা এই সেটিং শুধু Super Admin-এর জন্য রাখা।
-- [ ] **পাসওয়ার্ড বদলালে অন্য সব সেশন লগআউট করা** (Profile এবং Users → edit)।
+- [x] **`trustProxies(at: '*')` ঠিক করা** ✅ ২০২৬-১১-১৯ ([backend/bootstrap/app.php:33](backend/bootstrap/app.php#L33))। এখন যে কেউ `X-Forwarded-For` হেডার পাঠিয়ে IP বদলাতে পারে, ফলে login brute-force limiter আর public form limiter বাইপাস হয়। সমাধান: `.env`-এ `TRUSTED_PROXIES` রেখে শুধু আসল proxy/Cloudflare-এর IP trust করা।
+- [x] **`analytics_head_code` admin পেজে না বসানো** ✅ ২০২৬-১১-১৯ (দুটোই: `/admin`-এ বসে না + শুধু Super Admin বদলাতে পারে) ([backend/app/Services/SeoService.php:98](backend/app/Services/SeoService.php#L98))। `settings.manage` থাকা Admin এখানে JS বসালে সেটা Super Admin-এর ব্রাউজারেও চলবে, ফলে "Admin roles বদলাতে পারে না" সীমাটা আর কাজ করে না। সমাধান: `/admin` পাথে স্কিপ করা, এবং/অথবা এই সেটিং শুধু Super Admin-এর জন্য রাখা।
+- [x] **পাসওয়ার্ড বদলালে অন্য সব সেশন লগআউট করা** ✅ ২০২৬-১১-১৯ (Profile এবং Users → edit)।
 
 ### অগ্রাধিকার ২: ডেটা ও প্রাইভেসি
-- [ ] **ছাত্রদের ডকুমেন্ট মোছার ব্যবস্থা।** Application soft-delete হয় কিন্তু ফাইল কখনো মোছে না; `model:prune` শিডিউল করা থাকলেও কোনো model `Prunable` নয়। একটা retention policy ঠিক করে (যেমন ৯০ দিন পর) force-delete আর ফাইল মোছা দরকার।
-- [ ] **Lead overwrite আটকানো** ([backend/app/Services/LeadService.php:36](backend/app/Services/LeadService.php#L36))। কারও ইমেইল দিয়ে public form সাবমিট করলে তার খোলা lead-এর নাম/ফোন বদলে যায়। নতুন তথ্য শুধু `meta.history`-তে রাখা উচিত।
-- [ ] **Backup dump-এ `ORDER BY` যোগ করা** ([backend/app/Console/Commands/BackupCommand.php:77](backend/app/Console/Commands/BackupCommand.php#L77))। ORDER BY ছাড়া `LIMIT/OFFSET` হলে বড় টেবিলে row বাদ পড়তে বা ডুপ্লিকেট হতে পারে।
+- [x] **ছাত্রদের ডকুমেন্ট মোছার ব্যবস্থা।** ✅ ২০২৬-১১-১৯ (মোছা আবেদন ৯০ দিন পর ফাইলসহ স্থায়ীভাবে মুছে যায়) Application soft-delete হয় কিন্তু ফাইল কখনো মোছে না; `model:prune` শিডিউল করা থাকলেও কোনো model `Prunable` নয়। একটা retention policy ঠিক করে (যেমন ৯০ দিন পর) force-delete আর ফাইল মোছা দরকার।
+- [x] **Lead overwrite আটকানো** ✅ ২০২৬-১১-১৯ ([backend/app/Services/LeadService.php:36](backend/app/Services/LeadService.php#L36))। কারও ইমেইল দিয়ে public form সাবমিট করলে তার খোলা lead-এর নাম/ফোন বদলে যায়। নতুন তথ্য শুধু `meta.history`-তে রাখা উচিত।
+- [x] **Backup dump-এ `ORDER BY` যোগ করা** ✅ ২০২৬-১১-১৯ ([backend/app/Console/Commands/BackupCommand.php:77](backend/app/Console/Commands/BackupCommand.php#L77))। ORDER BY ছাড়া `LIMIT/OFFSET` হলে বড় টেবিলে row বাদ পড়তে বা ডুপ্লিকেট হতে পারে।
 
 ### অগ্রাধিকার ৩: পারফরম্যান্স ও কোয়ালিটি
 - [ ] `AppIcon` (lucide `DynamicIcon`)-এর icon map চাঙ্ক ৩৫৮ KB (gzip ৬২ KB), হোমপেজেও লোড হয়। শুধু ব্যবহৃত আইকনগুলোর একটা ছোট map বানানো যায়।
 - [ ] `forms` চাঙ্ক (zod + react-hook-form, ১৩৬ KB) সব পেজে preload হয়। ফুটারের newsletter ফর্মকে zod ছাড়া করা যায়।
 - [ ] oxlint-এর warning কমানো (`set-state-in-effect`, `only-export-components`)।
-- [ ] README-তে `scripts\build-release.ps1` আর `release\riths-<date>.zip` পাথগুলোর backslash হারিয়ে গেছে, ঠিক করা দরকার।
-- [ ] নিয়মিত ছোট ছোট git commit করা (এখন পুরো ইতিহাস একটা কমিটে)।
+- [x] ✅ README-তে `scripts\build-release.ps1` আর `release\riths-<date>.zip` পাথগুলোর backslash হারিয়ে গেছে, ঠিক করা দরকার।
+- [x] নিয়মিত ছোট ছোট git commit করা ✅ (এখন প্রতিটা ফিচার আলাদা কমিটে)।
 
 ### ভবিষ্যতের সম্ভাব্য ফিচার (এখনো সিদ্ধান্ত হয়নি)
 - Newsletter-এ double opt-in আর unsubscribe লিংক
@@ -96,7 +99,7 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 - Migration `2026_11_19_000001_create_news_table`: `news` টেবিল, পারমিশন সিঙ্ক আর `/news` listing পেজ তৈরি করে।
 - বাকি: হেডার মেনুতে "News" লিংক (Admin → Menus), কমিট, সার্ভারে ডেপ্লয়।
 
-### ৮.২ Webmail (cPanel মেইলবক্স) ✅ কোড সম্পন্ন, কমিট `164c044` (ডেপ্লয় হয়েছে; cPanel API টোকেন বসানো বাকি)
+### ৮.২ Webmail (cPanel মেইলবক্স) ✅ কোড সম্পন্ন, কমিট `164c044` (ডেপ্লয় হয়েছে; টোকেন `pngiep-app` বসানো, আসল cPanel-এ মেইলবক্স চেক যাচাই করা)
 - cPanel UAPI + API Token (শুধু সার্ভারের `.env`-এ, DB-তে না)।
 - Users ফর্মে ইমেইল লিখলে লাইভ চেক: 🟢 নতুন মেইলবক্স তৈরি হবে / 🔵 আগের মেইলবক্সের সাথে যুক্ত হবে / ⚪ বাইরের ইমেইল, মেইলবক্স হবে না।
 - Save করলে: নতুন হলে `Email::add_pop`; আগে থাকলে শুধু ইউজারের সাথে যুক্ত (মেইলবক্সে হাত দেওয়া হবে না)।
@@ -116,3 +119,11 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 - **ভরসাযোগ্যতা:** queue job (৩ বার চেষ্টা)। DB-তে `facebook_post_id`, `facebook_posted_at`, `facebook_error` রাখা হবে, যাতে একই এন্ট্রি দুবার পোস্ট না হয়। admin লিস্টে স্ট্যাটাস দেখাবে (✅ পোস্ট হয়েছে / ⏳ অপেক্ষায় / ❌ ব্যর্থ + কারণ)। Token মেয়াদোত্তীর্ণ বা ব্যর্থ হলে admin notification।
 - **সীমাবদ্ধতা:** Meta App-কে Live mode-এ রাখতে হবে। Meta-র নিয়ম অনুযায়ী Business Verification বা App Review লাগতে পারে। এটা Facebook-এর দিক থেকে, কোডের বাইরে।
 - **টেস্ট:** Graph API-র `Http::fake`। আসল পেজে কিছু পোস্ট হবে না।
+
+### ৮.৫ ডিরেক্টর প্রোফাইল ✅ সম্পন্ন, কমিট `99aa3b4` (ডেপ্লয় হয়েছে)
+- `/team/{slug}`: ছবি, পদবি, brief, key details, যোগাযোগ, "Message from the Director", পূর্ণ প্রোফাইল, অন্য সদস্য।
+- বাকি: Admin → Team Members-এ প্রত্যেক ডিরেক্টরের বাণী আর প্রোফাইল লেখা (কোম্পানির কাজ)।
+
+### ৮.৬ রিভিউয়ের নিরাপত্তা ও ডেটা সমাধান ✅ (২০২৬-১১-১৯)
+- অংশ ৭-এর অগ্রাধিকার ১ ও ২-এর সব কাজ, README, ROADMAP, আর লগইন ছাড়া admin API-তে JSON 401।
+- এরপরের পূর্ণ সিকিউরিটি অ্যানালাইসিস: [docs/SECURITY_REPORT.md](docs/SECURITY_REPORT.md)।

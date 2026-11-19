@@ -103,3 +103,24 @@
 | তারিখ | কী হয়েছে |
 |---|---|
 | 2026-11-19 | পুরো প্রজেক্ট রিভিউ; `Plan.md`, `UI.md`, `Database.md`, `development.md`, `chathistory.md` তৈরি। কোডে কোনো পরিবর্তন করা হয়নি। |
+| 2026-11-19 | `8821bdd` **News মডিউল**: `/news`, admin CRUD, scheduling, SEO, sitemap, সার্চ। NewsTest (৪টা)। |
+| 2026-11-19 | `aa8a9c9` **YouTube embed**: এডিটরে বাটন, `config/purify.php` (শুধু YouTube iframe), স্টোরি কার্ডে ব্যাজ, ভিজিটরের ফর্মে লিংক। YouTubeEmbedTest (২টা)। |
+| 2026-11-19 | `164c044` **Staff mailbox + Webmail** (cPanel UAPI)। WebmailTest (৭টা)। |
+| 2026-11-19 | `0e4a459` **Facebook auto-post** (News + Blog)। FacebookAutoPostTest (৭টা)। |
+| 2026-11-19 | প্রথম প্রোডাকশন ডেপ্লয় (৩টা migration), cPanel API টোকেন `pngiep-app` তৈরি করে `.env`-এ বসানো। লোকালে C:\xampp সরিয়ে শুধু F:\Lovable\xampp (Windows সার্ভিস), `loon_interior` শিফট। |
+| 2026-11-19 | `99aa3b4` **ডিরেক্টর প্রোফাইল** `/team/{slug}`; `HasSeo` soft-delete ছাড়া মডেলেও কাজ করে। TeamProfileTest (৩টা)। ডেপ্লয় হয়েছে। |
+| 2026-11-19 | **রিভিউয়ের সমাধান** (#1–#6, #8, #9) + লগইন ছাড়া admin API-তে JSON 401। HardeningTest (৬টা)। মোট ১১৫টা টেস্ট পাস। |
+
+### রিভিউয়ের সমস্যাগুলোর বর্তমান অবস্থা (৩ নম্বর অংশের টেবিল অনুযায়ী)
+
+| # | অবস্থা | কীভাবে |
+|---|---|---|
+| 1 | ✅ | `TRUSTED_PROXIES` env; ডিফল্টে কোনো proxy trust করা হয় না (সার্ভারে PHP সরাসরি `HTTPS=on` দেখে, যাচাই করা) |
+| 2 | ✅ | `/admin`-এ analytics বসে না; `SettingController` শুধু Super Admin-কে বদলাতে দেয়, অন্যদের ফর্মে read-only |
+| 3 | ✅ | `Application` `Prunable`: মোছার ৯০ দিন পর ফাইলসহ force-delete |
+| 4 | ✅ | `LeadService::capture` শুধু খালি ঘর পূরণ করে; ভিন্ন নাম/ফোন `meta.history[].submitted`-এ |
+| 5 | ✅ | `App\Support\UserSessions::endOthers` (Profile ও Users → edit) |
+| 6 | ✅ | primary key অনুযায়ী `ORDER BY` (লোকাল MariaDB-তে ৬০/৬০ টেবিল dump যাচাই) |
+| 7 | ⏳ | পারফরম্যান্স: এখনো বাকি |
+| 8 | ✅ | README-র release পাথ ঠিক করা |
+| 9 | ✅ | ROADMAP-এ টেস্ট সংখ্যা ও "After launch" অংশ |

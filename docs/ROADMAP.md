@@ -86,4 +86,16 @@ a successful production build and its acceptance checklist signed off.
       India / Dubai (UAE) / Australia with the 6 authorised universities, scholarship requirements page, FAQs.
       Demo courses (sample fees), stories, testimonials, gallery and blog in every environment, tracked in a manifest and
       removable with `php artisan app:demo-content remove`; social share image generated from the logo
-- [x] Full responsive QA crawl of every sitemap URL (320 – 1440 px); SeoTest added (78 tests total)
+- [x] Full responsive QA crawl of every sitemap URL (320 – 1440 px); SeoTest added (78 tests total, 86 at the 2026-11-19 review)
+
+## After launch (2026-11-19)
+
+- [x] **News** module: `/news`, `/news/{slug}`, admin CRUD with scheduling, SEO (NewsArticle), sitemap, search
+- [x] **YouTube** embeds in the rich-text editor (YouTube iframes only), "Video" badge on story cards, video link in the visitor story form
+- [x] **Staff mailboxes + Webmail**: create / link cPanel mailboxes from Users, one-click Roundcube login
+- [x] **Facebook auto-post** for News and Blog (Graph API, queue, retries, status column, post-now)
+- [x] **Director profiles** at `/team/{slug}`: details, message (speech), full profile, SEO (Person)
+- [x] Security & data fixes from the code review: trusted proxies, analytics code (Super Admin only, never on /admin),
+      sign-out of other sessions on password change, lead details not overwritten by public forms,
+      deleted applications + documents erased after 90 days, ordered backup dump, JSON 401 for guest API calls
+- [x] Tests: NewsTest, YouTubeEmbedTest, WebmailTest, FacebookAutoPostTest, TeamProfileTest, HardeningTest (115 tests total)

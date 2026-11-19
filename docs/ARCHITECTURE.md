@@ -103,3 +103,18 @@ rate limiters · Form Request validation everywhere · Gates + policies · inact
 blocked mid-session · upload MIME sniffing + size limits, no SVG · private `documents` disk ·
 encrypted SMTP password · security headers (nosniff, frame, referrer, HSTS on HTTPS) ·
 CORS restricted to configured origins · no secrets in the frontend bundle.
+
+## Additions after launch (2026-11-19)
+
+- **News** (`news` table, `NewsController`, `/news`), **director profiles** (`team_members.slug/profile/message/highlights`, `/team/{slug}`).
+- **Rich text**: `config/purify.php` + `App\Support\PurifyDefinition`. Same allow-list as before plus YouTube
+  embeds (`<div data-youtube-video><iframe src="https://www.youtube(-nocookie).com/embed/ID">`); any other iframe is removed.
+- **Staff mailboxes**: `App\Services\CpanelMail` (cPanel UAPI, token in `.env`) and `StaffMailbox` (create / link / unlink);
+  `MailboxController` (status check, unlink/delete, one-time Webmail session). Permissions `mailboxes.manage`, `webmail.access`.
+- **Facebook auto-post**: `App\Services\FacebookPublisher` + queued `PublishToFacebook` job (unique, lock, 3 tries);
+  scheduler `facebook-autopost` every minute; Page token encrypted in Settings.
+- **Security hardening** (code review): `TRUSTED_PROXIES` instead of trusting every proxy; analytics snippet never
+  rendered on `/admin` and editable by Super Admin only; password change ends other sessions (`App\Support\UserSessions`);
+  public forms no longer overwrite an open lead's name/phone (kept in `meta.history[].submitted`); deleted applications
+  and their documents are pruned after 90 days (`Application::prunable`); backup dump ordered by primary key;
+  guest API calls always get JSON 401.

@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\StaffMailbox;
 use App\Support\ApiResponse;
+use App\Support\UserSessions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -65,6 +66,11 @@ class UserController extends Controller
         }
 
         $user->update($data);
+        if (isset($data['password'])) {
+            // An admin set a new password: sign the user out everywhere (their own browser too,
+            // unless they are editing themselves).
+            UserSessions::endOthers($user, $user->is($request->user()) ? $request->session()->getId() : null);
+        }
         $mailbox = $this->syncMailbox($request, $user, $mailboxes);
 
         return ApiResponse::success(new UserResource($user->load('role')), $this->message('User updated.', $mailbox), meta: ['mailbox' => $mailbox]);

@@ -82,6 +82,11 @@ export default function LeadDetailPage() {
                   {history.map((h, i) => (
                     <li key={i} className="rounded-xl border border-slate-100 p-3 text-sm text-slate-600">
                       <span className="text-xs text-slate-400">{labelOf(meta.lead_sources, h.source)} · {h.at && formatDateTime(h.at)}</span>
+                      {h.submitted && (
+                        <p className="mt-1 text-xs text-amber-700">
+                          Submitted different details (not applied): {[h.submitted.name, h.submitted.phone].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
                       {h.message && <p className="mt-1 whitespace-pre-line">{h.message}</p>}
                     </li>
                   ))}

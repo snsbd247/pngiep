@@ -27,7 +27,9 @@ const groupLabel = (g) => GROUP_LABELS[g] ?? headline(g)
 function SettingControl({ setting, control, register, errors, previews, setPreview }) {
   const name = `settings.${setting.key}`
   const error = errors?.settings?.[setting.key]?.message
-  const common = { label: setting.label, help: setting.help, error }
+  const common = setting.locked
+    ? { label: setting.label, help: 'Only a Super Admin can change this.', error, disabled: true }
+    : { label: setting.label, help: setting.help, error }
 
   switch (setting.type) {
     case 'boolean':

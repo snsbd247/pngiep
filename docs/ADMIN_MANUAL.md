@@ -30,7 +30,10 @@ Notifications, Activity Log, Profile and Logout.
 | **Super Admin** | Everything, including Roles & Permissions |
 | **Admin** | Everything except editing roles |
 | **Content Manager** | Website content only: pages, homepage, directory, blog, gallery, media. No settings, users or student data. |
-| **Counsellor** | Dashboard and **their own** appointments only |
+| **Counsellor** | Dashboard, **their own** appointments and their own Webmail |
+
+Only a **Super Admin** can change the analytics code (Settings › SEO), because it runs on every page.
+Changing a password (your own or a user's) signs that account out on all other devices.
 
 Admins create accounts under **System › Users**. Permissions per role can be adjusted under
 **Roles & Permissions** (Super Admin only). If you open a page you are not allowed to use,
@@ -119,6 +122,8 @@ from the booking page instead.
 | **Media Library** | All uploaded images. Large photos are resized and converted to WebP automatically. |
 | **Directory** | Destinations (`/study-in-…` pages), Universities, Courses |
 | **Content** | Blog & notices, success stories, photo albums, videos, services, testimonials, partners, team, timeline, FAQs |
+| **News** | News articles at `/news` (All News, Add News, Drafts / Scheduled / Published) |
+| **Team Members** | Directors and team. Each has a profile page at `/team/name`: short bio, *Key details* (one per line), *Message / speech*, *Full profile*, photo (portrait 4:5), contact links |
 
 Tips:
 
@@ -130,6 +135,21 @@ Tips:
 - Visitors' "Share your story" submissions arrive as *Draft* success stories. Review them
   before publishing.
 - Videos only need the YouTube link.
+- **YouTube inside text**: in any rich-text editor press the ▶ button and paste a YouTube link
+  (watch, youtu.be or shorts). Other video sites are removed when saving.
+- **Facebook**: News and Blog entries have *Post to Facebook* (on by default for new entries). When the
+  entry is published (or its scheduled date comes) it is posted to the company Facebook Page with its
+  image and link. The list shows *Waiting*, *Posted* or *Failed* (hover for the reason) and a
+  *Post now* / *Retry* link. Older entries are only posted when you press *Post now*.
+
+### Staff mailboxes and Webmail
+
+- **System › Users**: when you type an `@pngiep.com` address the form shows what will happen:
+  a new mailbox will be **created**, or an existing one will be **linked**. A new mailbox's password is
+  shown **once** after saving (copy it; it is only needed for phone or Outlook setup).
+- Linked staff open their mail with the **Webmail** button at the top of the admin panel (no password).
+- Deleting a user only unlinks the mailbox; the mail stays. To delete the mailbox itself use the
+  red envelope button in the Users list (this deletes all its mail permanently).
 
 ---
 
@@ -142,9 +162,10 @@ Tips:
 | Contact | Phones, WhatsApp, email, address, office hours, contact-form inquiry types (one per line), map |
 | Social | Social media links |
 | Appearance | Brand colours |
-| SEO | Default title/description/share image, Google verification, analytics code, robots.txt |
+| SEO | Default title/description/share image, Google verification, analytics code (Super Admin only), robots.txt |
 | Appointment | Timezone and label, length, booking window, minimum notice, cancellation notice and policy, working days, auto-confirm, meeting modes |
 | Email | SMTP server, sender, **admin notification email**, *Send test* |
+| Facebook | Auto-post on/off, Page ID, Page access token (hidden once saved), post text with `{title}` `{excerpt}` `{url}`, *Test connection* and setup steps |
 | Forms | Texts on the enquiry, story and apply forms |
 
 **Email templates** (Business › Email Templates) contain the wording of every automatic

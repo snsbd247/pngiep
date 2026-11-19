@@ -56,6 +56,8 @@
 | `/success-stories`, `/:slug` | সাকসেস স্টোরি | দেশের ট্যাব, ভিডিও টেস্টিমোনিয়াল, "আপনার গল্প শেয়ার করুন" ফর্ম |
 | `/gallery`, `/gallery/photos`, `/gallery/videos` | গ্যালারি | ক্যাটাগরি, অ্যালবাম, lightbox, YouTube privacy embed |
 | `/blog`, `/blog/:slug` | ব্লগ ও নোটিশ | শেয়ার বাটন, সম্পর্কিত পোস্ট, জনপ্রিয় পোস্ট |
+| `/news`, `/news/:slug` | নিউজ (২০২৬-১১-১৯) | সার্চ, sort, জনপ্রিয় নিউজ, উৎসের লিংক, "More News"; Blog-এর কার্ড ডিজাইন (`BlogCard basePath="/news"`) |
+| `/team/:slug` | ডিরেক্টর প্রোফাইল (২০২৬-১১-১৯) | ছবি (৪:৫), পদবি, brief, key details চেকলিস্ট, যোগাযোগ, "Message from the Director" কার্ড, পূর্ণ প্রোফাইল, অন্য সদস্যদের কার্ড; About-এর `TeamCard` থেকে "View Profile" |
 | `/search` | গ্লোবাল সার্চ | |
 | `/book-appointment` | বুকিং উইজার্ড | সার্ভিস → কাউন্সেলর → তারিখ → সময় → তথ্য → নিশ্চিতকরণ, `.ics` ডাউনলোড |
 | `/appointment/:token` | অ্যাপয়েন্টমেন্ট ম্যানেজ | দেখা, রিশিডিউল, বাতিল (noindex) |
@@ -78,6 +80,14 @@ listing · rich_text · text_images · list · table · gallery · related_unive
 - **জেনেরিক পেজ**: `content/:resource` → `ResourceListPage` (DataTable, সার্চ, ফিল্টার, ড্র্যাগ করে সাজানো), `content/:resource/:id` → `ResourceFormPage` (স্কিমা-চালিত ফর্ম, SEO ফিল্ড, সেকশন বিল্ডার)।
 - **বিশেষ পেজ**: Dashboard (স্ট্যাট কার্ড, রিপোর্ট), Settings (গ্রুপ ট্যাব), System, Media Library (গ্রিড, ফোল্ডার, বাল্ক ডিলিট), Menus (nested drag), Homepage Sections, CRM পেজগুলো (তালিকা + ডিটেইল + নোট)।
 - **Auth পেজ**: login, forgot-password, reset-password (`GuestOnly` গার্ড)।
+- **২০২৬-১১-১৯-এর সংযোজন**:
+  - Topbar-এ **Webmail** বাটন (লিংক করা মেইলবক্স থাকলে; নতুন ট্যাবে এককালীন cPanel সেশন POST করে)।
+  - Sidebar-এ **News** মেনু আর Settings › **Facebook Auto-post**।
+  - Users ফর্মে ইমেইলের নিচে লাইভ মেইলবক্স-স্ট্যাটাস, "Staff mailbox & Webmail" সুইচ, নতুন মেইলবক্সের পাসওয়ার্ড একবার দেখানোর মোডাল, তালিকায় Mailbox কলাম।
+  - News/Blog তালিকায় **Facebook** কলাম (Posted / Waiting / On publish / Failed + Retry / Post now)।
+  - রিচ-টেক্সট এডিটরে **YouTube** বাটন (`SquarePlay` আইকন; embed `.prose-content`-এ ১৬:৯, রেসপনসিভ)।
+  - Success story কার্ডে "▶ Video" ব্যাজ; ভিজিটরের স্টোরি ফর্মে ঐচ্ছিক YouTube লিংক।
+  - Super Admin ছাড়া অন্যদের জন্য Settings-এর analytics code ঘর read-only।
 
 ## ৬. UX নিয়ম
 

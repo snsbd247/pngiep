@@ -29,8 +29,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
         $middleware->append(SecurityHeaders::class);
         $middleware->alias(['active' => EnsureUserIsActive::class]);
-        // cPanel / proxies terminate TLS before PHP.
-        $middleware->trustProxies(at: '*');
+        // Only trust X-Forwarded-* from known proxies (e.g. a load balancer or Cloudflare), set as a
+        // comma-separated list in TRUSTED_PROXIES. Trusting every address would let anyone fake their
+        // IP and slip past the login and form rate limits. Empty = no proxy (the server talks to clients directly).
+        $proxies = array_values(array_filter(array_map('trim', explode(',', (string) env('TRUSTED_PROXIES', '')))));
+        if ($proxies) {
+            $middleware->trustProxies(at: $proxies);
+        }
+        // API requests without a session get a JSON 401 instead of a redirect to a non-existent login route.
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : url('admin/login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $isApi = fn (Request $request) => $request->is('api/*') || $request->expectsJson();

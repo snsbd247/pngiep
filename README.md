@@ -2,8 +2,10 @@
 
 Website + admin CMS for **PNG International Education Portal** (Port Moresby, Papua New Guinea · pngiep.com).
 
-Study-abroad consultancy website + admin CMS: university and course directory, blog,
-success stories, galleries, appointment booking, lead CRM and application management.
+Study-abroad consultancy website + admin CMS: university and course directory, blog and news,
+success stories (with YouTube videos), galleries, director profiles, appointment booking, lead CRM
+and application management, staff mailboxes with one-click Webmail (cPanel) and Facebook Page
+auto-posting.
 Every piece of business content is managed from the admin panel. Nothing company-specific
 is hard-coded in the frontend.
 
@@ -75,10 +77,14 @@ cd frontend && npm run lint && npm run build
 ## Release & deployment
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scriptsuild-release.ps1   # → releaseiths-<date>.zip
+powershell -ExecutionPolicy Bypass -File scripts\build-release.ps1   # → release\riths-<date>.zip
 ```
 
-Upload the zip to cPanel and follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+First install: upload the zip to cPanel and follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+Updates: copy the changed files, then `php artisan migrate --force` and rebuild the caches
+(section 11 of DEPLOYMENT.md). Take a backup first (`php artisan app:backup`).
+
+Live site: https://pngiep.com (cPanel, `~/riths` + `~/public_html`). Code: https://github.com/snsbd247/pngiep (`main`).
 
 ## Docs
 
@@ -87,3 +93,5 @@ Upload the zip to cPanel and follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): cPanel deployment, cron, SMTP, HTTPS, updates, backups, troubleshooting
 - [docs/ADMIN_MANUAL.md](docs/ADMIN_MANUAL.md): guide for office staff
 - [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md): pre-launch and regression checklist
+- [Plan.md](Plan.md), [UI.md](UI.md), [Database.md](Database.md), [development.md](development.md),
+  [chathistory.md](chathistory.md): project plan, design, database, development history and chat log (Bangla)

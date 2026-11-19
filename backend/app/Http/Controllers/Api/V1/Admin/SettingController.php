@@ -16,20 +16,51 @@ class SettingController extends Controller
 {
     public function __construct(private readonly SettingService $settings) {}
 
-    public function index(): JsonResponse
+    /**
+     * Raw HTML/JS injected into public pages. It runs on the same site as the admin panel, so only
+     * a Super Admin may change it (otherwise an Admin could act with a Super Admin's session).
+     */
+    private const SUPER_ADMIN_ONLY = ['analytics_head_code'];
+
+    public function index(Request $request): JsonResponse
     {
-        return ApiResponse::success($this->settings->adminSettings());
+        return ApiResponse::success($this->present($request));
     }
 
     public function update(SettingsUpdateRequest $request, ActivityLogger $logger): JsonResponse
     {
-        $changed = $this->settings->update($request->validated('settings'));
+        $values = $request->validated('settings');
+
+        if (! $request->user()->isSuperAdmin()) {
+            foreach (self::SUPER_ADMIN_ONLY as $key) {
+                if (array_key_exists($key, $values) && trim((string) $values[$key]) !== trim((string) $this->settings->get($key))) {
+                    return ApiResponse::error('Only a Super Admin can change the analytics code.', 403);
+                }
+                unset($values[$key]);
+            }
+        }
+
+        $changed = $this->settings->update($values);
 
         if ($changed) {
             $logger->log('update', 'settings', description: 'Settings updated', properties: ['keys' => $changed]);
         }
 
-        return ApiResponse::success($this->settings->adminSettings(), 'Settings saved.');
+        return ApiResponse::success($this->present($request), 'Settings saved.');
+    }
+
+    /** Admin settings, with Super-Admin-only fields marked read-only for everyone else. */
+    private function present(Request $request): array
+    {
+        $settings = $this->settings->adminSettings();
+        if ($request->user()?->isSuperAdmin()) {
+            return $settings;
+        }
+
+        return array_map(fn (array $group) => array_map(
+            fn (array $s) => in_array($s['key'], self::SUPER_ADMIN_ONLY, true) ? $s + ['locked' => true] : $s,
+            $group,
+        ), $settings);
     }
 
     /** Sends a test email using the saved SMTP settings. */

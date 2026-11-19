@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Support\ApiResponse;
+use App\Support\UserSessions;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,12 @@ class ProfileController extends Controller
         }
 
         $user->update($data);
+
+        if (isset($data['password'])) {
+            // New password: sign out every other device, keep this one (with a fresh session id).
+            $request->session()->regenerate();
+            UserSessions::endOthers($user, $request->session()->getId());
+        }
 
         return ApiResponse::success((new UserResource($user->load('role')))->withPermissions(), 'Profile updated.');
     }

@@ -79,6 +79,11 @@ the 6 authorised universities, scholarship requirements and services.
 - [ ] (auto) Login throttling (5/min per email + IP); public form throttling
 - [ ] (auto) Rich text is sanitised (HTML Purifier); visitor stories are stored as plain text
 - [ ] (auto) Application documents: private disk, random file names, no public URL, permission-checked download
+- [ ] (auto) `X-Forwarded-For` cannot change the client IP (no trusted proxies unless `TRUSTED_PROXIES` is set)
+- [ ] (auto) Analytics code is not rendered on `/admin`; only a Super Admin can change it
+- [ ] (auto) Changing a password signs out the user's other sessions
+- [ ] (auto) Only YouTube iframes survive in rich text
+- [ ] cPanel API token and Facebook Page token are not visible anywhere in the admin panel or API responses
 - [ ] `composer audit` and `npm audit` report no vulnerabilities
 - [ ] Seed admin password changed; staff use individual accounts
 

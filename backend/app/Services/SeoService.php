@@ -95,8 +95,9 @@ class SeoService
         // Without an uploaded favicon, an empty icon stops browsers requesting /favicon.ico
         // from the web root (outside the app when installed in a sub-folder).
         $tags[] = '<link rel="icon" href="'.($favicon ? $e($favicon) : 'data:,').'">';
-        if ($analytics = $this->settings->get('analytics_head_code')) {
-            // Trusted admin-entered snippet (Settings > SEO, Super Admin / Admin only).
+        // Admin-entered snippet (Settings > SEO; only a Super Admin can change it). Never on the
+        // admin panel itself, where a script could act with the signed-in user's session.
+        if (! ($meta['is_admin'] ?? false) && ($analytics = $this->settings->get('analytics_head_code'))) {
             $tags[] = $analytics;
         }
 

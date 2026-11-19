@@ -31,9 +31,22 @@ class LeadService
         ], fn ($v) => $v !== null && $v !== '');
 
         if ($lead) {
+            // Anyone can type any email into a public form, so new details never overwrite what
+            // staff already have: empty fields are filled, and differing values are kept in the
+            // history entry for staff to review.
+            $missing = array_filter($fields, fn ($value, $key) => blank($lead->{$key}), ARRAY_FILTER_USE_BOTH);
+            $differing = array_filter(
+                array_diff_key($fields, $missing),
+                fn ($value, $key) => (string) $value !== (string) ($lead->{$key} instanceof \BackedEnum ? $lead->{$key}->value : $lead->{$key}),
+                ARRAY_FILTER_USE_BOTH,
+            );
+
             $history = $lead->meta['history'] ?? [];
-            $history[] = array_filter(['source' => $source->value, 'at' => now()->toIso8601String(), 'message' => $data['message'] ?? null]);
-            $lead->fill($fields)->forceFill(['meta' => array_merge($lead->meta ?? [], ['history' => array_slice($history, -20)])])->save();
+            $history[] = array_filter([
+                'source' => $source->value, 'at' => now()->toIso8601String(), 'message' => $data['message'] ?? null,
+                'submitted' => array_intersect_key($differing, array_flip(['name', 'phone'])) ?: null,
+            ]);
+            $lead->fill($missing)->forceFill(['meta' => array_merge($lead->meta ?? [], ['history' => array_slice($history, -20)])])->save();
 
             return $lead;
         }

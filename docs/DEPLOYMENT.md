@@ -104,6 +104,9 @@ SESSION_SECURE_COOKIE=true      # HTTPS only
 SESSION_DOMAIN=null
 SANCTUM_STATEFUL_DOMAINS=example.com,www.example.com
 CORS_ALLOWED_ORIGINS=https://example.com,https://www.example.com
+# Only if a proxy / CDN (e.g. Cloudflare) sits in front of the server: its IP ranges, comma-separated.
+# Leave unset on a normal cPanel server, otherwise visitors could fake their IP.
+# TRUSTED_PROXIES=
 
 QUEUE_CONNECTION=database
 CACHE_STORE=file
@@ -310,6 +313,9 @@ php artisan up
 
 - [ ] `APP_DEBUG=false`, `APP_ENV=production`
 - [ ] HTTPS forced, `SESSION_SECURE_COOKIE=true`
+- [ ] `TRUSTED_PROXIES` unset (or only your real proxy / CDN ranges)
+- [ ] `CPANEL_API_TOKEN` only in `.env`; delete the token in cPanel › Manage API Tokens if it may have leaked
+- [ ] Analytics code (Settings › SEO) entered by a Super Admin only
 - [ ] Only `public/` is web-accessible (Option A or B as above)
 - [ ] `https://example.com/.env` returns **403/404** (the `.htaccess` blocks dotfiles)
 - [ ] Seed admin password changed and removed from `.env`

@@ -25,6 +25,7 @@ class SpaController extends Controller
 
         $template = Cache::remember('spa.index.'.File::lastModified($path), now()->addDay(), fn () => File::get($path));
         $meta = $seo->forPath('/'.ltrim($request->path(), '/'));
+        $meta['is_admin'] = $request->is('admin', 'admin/*');
 
         // Support installs in a sub-folder (e.g. http://localhost/riths): prefix built asset
         // URLs and tell the SPA its base path (used for routing, API calls and lazy chunks).

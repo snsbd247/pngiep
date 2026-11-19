@@ -72,9 +72,11 @@ class BackupCommand extends Command
                 $create = $pdo->query("SHOW CREATE TABLE `{$table}`")->fetch(PDO::FETCH_NUM)[1];
                 gzwrite($out, "DROP TABLE IF EXISTS `{$table}`;\n{$create};\n\n");
 
-                // Keyset-free paging is fine at this scale; rows are streamed in chunks.
+                // Rows are streamed in chunks. A stable ORDER BY (primary key, else every column)
+                // keeps LIMIT/OFFSET pages from skipping or repeating rows.
+                $order = $this->orderBy($pdo, $table);
                 for ($offset = 0; ; $offset += self::CHUNK) {
-                    $rows = $pdo->query("SELECT * FROM `{$table}` LIMIT ".self::CHUNK." OFFSET {$offset}")->fetchAll(PDO::FETCH_ASSOC);
+                    $rows = $pdo->query("SELECT * FROM `{$table}` ORDER BY {$order} LIMIT ".self::CHUNK." OFFSET {$offset}")->fetchAll(PDO::FETCH_ASSOC);
                     if (! $rows) {
                         break;
                     }
@@ -88,6 +90,18 @@ class BackupCommand extends Command
         } finally {
             gzclose($out);
         }
+    }
+
+    /** "`id`" (or the composite primary key); tables without one are ordered by all columns. */
+    private function orderBy(PDO $pdo, string $table): string
+    {
+        $keys = array_column($pdo->query("SHOW KEYS FROM `{$table}` WHERE Key_name = 'PRIMARY'")->fetchAll(PDO::FETCH_ASSOC), 'Column_name', 'Seq_in_index');
+        ksort($keys);
+        if (! $keys) {
+            $keys = array_column($pdo->query("SHOW COLUMNS FROM `{$table}`")->fetchAll(PDO::FETCH_ASSOC), 'Field');
+        }
+
+        return '`'.implode('`, `', array_map(fn ($c) => str_replace('`', '``', $c), $keys)).'`';
     }
 
     private function archiveFiles(string $path): int

@@ -23,7 +23,7 @@
 | `roles` | name, slug (U), description, is_system | super-admin, admin, content-manager, counsellor |
 | `permissions` | name, slug (U), module | `config/permissions.php` থেকে seed হয় |
 | `role_permissions` | role_id, permission_id | PK দুটো মিলিয়ে, cascade |
-| `users` | role_id (FK, null on delete), name, email (U), phone, avatar, password, is_active, last_login_at/ip, notification_preferences (json) | soft delete |
+| `users` | role_id (FK, null on delete), name, email (U), phone, avatar, password, is_active, last_login_at/ip, notification_preferences (json), **mailbox (U), mailbox_linked_at, mailbox_created** (cPanel মেইলবক্স, ২০২৬-১১-১৯) | soft delete |
 | `password_reset_tokens`, `sessions`, `personal_access_tokens` | Laravel স্ট্যান্ডার্ড | session ড্রাইভার: database |
 | `cache`, `cache_locks`, `jobs`, `job_batches`, `failed_jobs` | Laravel স্ট্যান্ডার্ড | cron-চালিত queue |
 | `settings` | group, key (U), value, type, label, help, options (json), is_public, is_encrypted, sort_order | |
@@ -45,7 +45,8 @@
 | `hero_slides` | badge, title, highlight, subtitle, image, mobile_image, ২টা বাটন, features (json), video_url, video_label |
 | `homepage_sections` | key (U), name, eyebrow, title, subtitle, image, button, items_limit, data (json) |
 | `homepage_statistics` | group, label, value, suffix, icon, description |
-| `team_members`, `timeline_items` | প্রোফাইল / সাল-ভিত্তিক মাইলস্টোন |
+| `team_members` | name, **slug (U)**, designation, photo, bio, **highlights (json), profile (html), message_title, message (html)**, email, phone, social_links (json), sort_order, is_active; SEO `seo_meta`-তে। প্রোফাইল পেজ `/team/{slug}` |
+| `timeline_items` | সাল-ভিত্তিক মাইলস্টোন |
 | `partners`, `testimonials` | featured, status, category / rating, country_code |
 | `faqs` | question, answer, category, page_key, faqable (nullable morph) |
 | `newsletter_subscribers` | email (U), name, status, ip_address |
@@ -67,7 +68,8 @@
 | `gallery_albums` → `gallery_images` | অ্যালবাম, cover, event_date → ছবি, width/height |
 | `gallery_videos` | youtube_url, youtube_id, thumbnail, duration |
 | `blog_categories`, `blog_tags`, `blog_post_tags` | ক্যাটাগরি (type, icon), ট্যাগ, pivot |
-| `blogs` | category, destination, author, type (blog/notice), title, slug (U), featured_image, content, published_at, status, views_count; INDEX(status, published_at) |
+| `blogs` | category, destination, author, type (blog/notice), title, slug (U), featured_image, content, published_at, status, views_count, **facebook_post, facebook_post_id, facebook_posted_at, facebook_error**; INDEX(status, published_at) |
+| `news` | author, author_name, title, slug (U), featured_image, excerpt, content, source_name, source_url, published_at, status, is_featured, views_count, facebook_* (blogs-এর মতো); soft delete; INDEX(status, published_at) |
 
 ### ২.৫ Business (CRM)
 | টেবিল | মূল কলাম |
@@ -106,6 +108,10 @@ terms ─ pages.page_category_id, destinations.destination_category_id, success_
 | `2026_01_06_000001` | `terms` টেবিল + pages/destinations/success_stories-এ category FK |
 | `2026_01_06_000002` | `users.notification_preferences` |
 | `2026_10_07_…` | `personal_access_tokens` (Sanctum) |
+| `2026_11_19_000001` | `news` টেবিল, `news.manage` পারমিশন, `/news` listing পেজ |
+| `2026_11_19_000002` | `users.mailbox*`, পারমিশন `webmail.access` ও `mailboxes.manage` |
+| `2026_11_19_000003` | blogs/news-এ `facebook_*` কলাম (পুরনো এন্ট্রিতে `facebook_post = false`), Settings › Facebook |
+| `2026_11_19_000004` | `team_members`-এ slug (পুরনো সদস্যদের জন্য তৈরি), highlights, profile, message_title, message |
 
 ## ৫. Seeder
 
@@ -119,7 +125,7 @@ terms ─ pages.page_category_id, destinations.destination_category_id, success_
 
 ## ৭. ডাটাবেজ-সংক্রান্ত জানা সমস্যা ও পরিকল্পনা
 
-- [ ] **ডকুমেন্ট retention**: `applications` soft-delete হলেও `application_documents` ফাইল থেকে যায়, আর কোনো model `Prunable` নয়। ফলে `model:prune` কিছুই করে না।
-- [ ] **Backup dump**: `SELECT * … LIMIT/OFFSET`-এ `ORDER BY` নেই।
-- [ ] **Lead merge**: পাবলিক ফর্ম খোলা lead-এর `name`/`phone` overwrite করে।
+- [x] **ডকুমেন্ট retention** (২০২৬-১১-১৯): `Application` এখন `Prunable`। admin যে আবেদন মুছেছেন, মোছার ৯০ দিন পর `model:prune` (প্রতিদিন) সেটা আর তার ফাইল স্থায়ীভাবে মুছে দেয়। সক্রিয় আবেদনে হাত দেয় না।
+- [x] **Backup dump** (২০২৬-১১-১৯): প্রতিটা টেবিল primary key অনুযায়ী `ORDER BY` করে পড়া হয়।
+- [x] **Lead merge** (২০২৬-১১-১৯): খোলা lead-এর শুধু খালি ঘর পূরণ হয়; ভিন্ন নাম/ফোন `meta.history[].submitted`-এ থাকে, admin-এ দেখায়।
 - [ ] চাইলে `sessions` টেবিল backup থেকে বাদ রাখা যায় (রিস্টোর করলে পুরোনো সেশন ফিরে আসে)।
