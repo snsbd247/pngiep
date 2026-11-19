@@ -12,7 +12,7 @@
 | Structured data (JSON-LD) | হোম: EducationalOrganization + **LocalBusiness** (ঠিকানা, ফোন, ইমেইল, লোগো, সোশ্যাল), WebSite + সার্চ বক্স; বিশ্ববিদ্যালয়: CollegeOrUniversity; কোর্স: Course; সার্ভিস: Service; ব্লগ: BlogPosting/NewsArticle; নিউজ: NewsArticle; ডিরেক্টর: Person; **সব পেজে BreadcrumbList** |
 | JavaScript-এর পরে | **ঠিক করা (২০২৬-১১-১৯):** আগে React চালু হয়ে canonical আর সব structured data মুছে দিত, তাই Google (যে JS চালিয়ে index করে) এগুলো দেখত না। এখন এগুলো থাকে; একটাই `<title>` |
 | Sitemap | `/sitemap.xml` (সব প্রকাশিত পেজ, lastmod সহ; noindex বাদ), robots.txt-এ লিংক; cookie ছাড়া, ১ ঘণ্টা ক্যাশ |
-| robots.txt | `/admin`, `/api/`, ব্যক্তিগত অ্যাপয়েন্টমেন্ট লিংক বন্ধ; Settings › SEO থেকে বদলানো যায় |
+| robots.txt | `/admin`, `/api/v1/admin/`, ব্যক্তিগত অ্যাপয়েন্টমেন্ট লিংক বন্ধ; **পাবলিক API (`/api/v1/`) খোলা**: Google পেজ রেন্ডার করতে এটা লাগে (আগে বন্ধ থাকায় Search Console "indexing issues" দেখাত, ২০২৬-১১-১৯ ঠিক করা)। Settings › SEO-র Custom robots.txt খালি রাখুন |
 | ইনডেক্স না করা | `/search` (noindex, follow), অ্যাডমিন, অ্যাপয়েন্টমেন্ট লিংক, ড্রাফট; ভুল ঠিকানায় আসল 404 (`/wp-login.php`-এর মতো ফাইল-ঠিকানাসহ) |
 | URL | পরিষ্কার: `/study-in-india`, `/universities/parul-university`, `/news/…`; HTTP→HTTPS আর www→মূল ডোমেইন 301 |
 | গতি | ছবি WebP-তে রূপান্তর ও ছোট করা, lazy loading, কোড-স্প্লিটিং (admin কোড ভিজিটর ডাউনলোড করে না), `/spa/assets` এক বছর ক্যাশ, gzip |
