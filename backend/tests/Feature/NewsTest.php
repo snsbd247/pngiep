@@ -78,4 +78,21 @@ class NewsTest extends TestCase
             'title' => 'News', 'slug' => 'news', 'template' => 'default', 'status' => 'draft',
         ])->assertUnprocessable()->assertJsonValidationErrors('slug');
     }
+
+    public function test_news_is_in_the_header_and_footer_menus_after_blog(): void
+    {
+        $this->seed(\Database\Seeders\MenuSeeder::class);
+        // An existing site without News: the migration inserts it after Blog, once.
+        \App\Models\MenuItem::query()->where('url', '/news')->delete();
+        $migration = require database_path('migrations/2026_11_19_000006_add_news_to_menus.php');
+        $migration->up();
+        $migration->up();
+
+        $menus = $this->getJson('/api/v1/site')->assertOk()->json('data.menus');
+        foreach (['header', 'footer_quick'] as $location) {
+            $urls = array_column($menus[$location]['items'], 'url');
+            $this->assertSame(1, count(array_keys($urls, '/news')), $location);
+            $this->assertSame(array_search('/blog', $urls) + 1, array_search('/news', $urls), $location);
+        }
+    }
 }

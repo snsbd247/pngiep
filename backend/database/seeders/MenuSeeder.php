@@ -34,12 +34,14 @@ class MenuSeeder extends Seeder
                 ['Success Stories', '/success-stories'],
                 ['Gallery', '/gallery'],
                 ['Blog', '/blog'],
+                ['News', '/news'],
                 ['Contact', '/contact'],
             ]],
             'footer_quick' => ['Quick Links', [
                 ['About Us', 'page:about'], ['Destinations', '/destinations'], ['Universities', '/universities'],
                 ['Services', '/services'], ['Success Stories', '/success-stories'], ['Gallery', '/gallery'],
-                ['Blog', '/blog'], ['Contact Us', '/contact'],
+                ['Blog', '/blog'],
+                ['News', '/news'], ['Contact Us', '/contact'],
             ]],
             'footer_services' => ['Our Services', [
                 ['Recruitment & Admission', '/services/student-recruitment-admission'],
