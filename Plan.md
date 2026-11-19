@@ -90,24 +90,24 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 
 ## ৮. নতুন ফিচার: প্ল্যান (2026-11-19, অনুমোদনের অপেক্ষায়)
 
-### ৮.১ News মডিউল ✅ কোড সম্পন্ন (কমিট/ডেপ্লয় বাকি)
+### ৮.১ News মডিউল ✅ কোড সম্পন্ন, কমিট `8821bdd` (সার্ভারে ডেপ্লয় বাকি)
 - পাবলিক `/news` (সার্চ, sort, pagination) আর `/news/{slug}` (উৎসের লিংক, জনপ্রিয় খবর, আরও খবর)।
 - Admin → **News** মেনু, `news.manage` পারমিশন, scheduled publish, SEO (`NewsArticle`), sitemap, সাইট সার্চ ও admin সার্চ।
 - Migration `2026_11_19_000001_create_news_table`: `news` টেবিল, পারমিশন সিঙ্ক আর `/news` listing পেজ তৈরি করে।
 - বাকি: হেডার মেনুতে "News" লিংক (Admin → Menus), কমিট, সার্ভারে ডেপ্লয়।
 
-### ৮.২ Webmail (cPanel মেইলবক্স)
+### ৮.২ Webmail (cPanel মেইলবক্স) ✅ কোড সম্পন্ন, কমিট `164c044` (cPanel টোকেন ও ডেপ্লয় বাকি)
 - cPanel UAPI + API Token (শুধু সার্ভারের `.env`-এ, DB-তে না)।
 - Users ফর্মে ইমেইল লিখলে লাইভ চেক: 🟢 নতুন মেইলবক্স তৈরি হবে / 🔵 আগের মেইলবক্সের সাথে যুক্ত হবে / ⚪ বাইরের ইমেইল, মেইলবক্স হবে না।
 - Save করলে: নতুন হলে `Email::add_pop`; আগে থাকলে শুধু ইউজারের সাথে যুক্ত (মেইলবক্সে হাত দেওয়া হবে না)।
 - Admin হেডারে "Webmail" বাটন → `Session::create_webmail_session_for_mail_user` দিয়ে এককালীন লগইন, Roundcube নতুন ট্যাবে। মেইলবক্সের পাসওয়ার্ড কোথাও রাখা হবে না।
 - নতুন পারমিশন: `webmail.access`, `mailboxes.manage`। সব ঘটনা Activity Log-এ। টেস্টে cPanel-এর fake।
 
-### ৮.৩ YouTube ভিডিও (Success Story)
+### ৮.৩ YouTube ভিডিও ✅ খ, গ, ঘ সম্পন্ন, কমিট `aa8a9c9` (ক বাদ; ডেপ্লয় বাকি)
 - এখন আছে: স্টোরি প্রতি একটা YouTube লিংক, ডিটেইল পেজে "Video Testimonial"।
 - প্রস্তাব: (ক) একাধিক ভিডিও, (খ) রিচ-টেক্সট এডিটরে "YouTube" বাটন (শুধু youtube.com / youtube-nocookie.com iframe অনুমোদিত; Blog/News/Pages-এও কাজ করবে), (গ) কার্ডে ▶ চিহ্ন, (ঘ) ভিজিটরের স্টোরি ফর্মে ভিডিও লিংক।
 
-### ৮.৪ Facebook অটো পোস্ট (News + Blog)
+### ৮.৪ Facebook অটো পোস্ট (News + Blog) ✅ কোড সম্পন্ন, কমিট `0e4a459` (Meta App সেটআপ ও ডেপ্লয় বাকি)
 - **কীভাবে:** Meta Graph API দিয়ে কোম্পানির Facebook **Page**-এ পোস্ট (ব্যক্তিগত প্রোফাইলে API দিয়ে পোস্ট করা যায় না)।
 - **একবারের সেটআপ:** Meta Developer App → পারমিশন `pages_manage_posts`, `pages_read_engagement` → long-lived Page Access Token। Token আর Page ID থাকবে Admin → Settings → **Facebook**-এ encrypted অবস্থায়, সাথে "Test connection" বাটন।
 - **কখন পোস্ট হবে:** News/Blog ফর্মে "Facebook-এ পোস্ট করুন" চেকবক্স (ডিফল্ট চালু)। এন্ট্রি **Published** হলে পোস্ট হবে। ভবিষ্যতের তারিখ দিলে প্রতি মিনিটের scheduler ঠিক সেই সময়ে পোস্ট করবে। Draft কখনো পোস্ট হবে না। Edit করলে আবার পোস্ট হবে না, তবে "আবার পোস্ট করুন" বাটন থাকবে।
