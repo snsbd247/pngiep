@@ -30,7 +30,8 @@ function HeroSlide({ slide, eager }) {
       {slide.image && (
         <div className="absolute inset-y-0 right-0 -z-10 w-full md:w-[58%]">
           <img src={assetUrl(slide.image)} alt="" className="size-full object-cover object-center" fetchPriority={eager ? 'high' : 'auto'} loading={eager ? 'eager' : 'lazy'} />
-          <div className="absolute inset-0 bg-gradient-to-r from-lavender via-lavender/80 to-transparent md:via-lavender/20" />
+          {/* Phones: the text spans the photo, so a near-solid wash keeps it readable; wider screens fade to the photo. */}
+          <div className="absolute inset-0 bg-lavender/85 md:bg-transparent md:bg-gradient-to-r md:from-lavender md:via-lavender/20 md:to-transparent" />
         </div>
       )}
       <div className="container-page flex min-h-[460px] items-center py-14 md:min-h-[520px] lg:min-h-[560px]">
@@ -138,7 +139,7 @@ function Universities({ section }) {
         <Carousel
           items={section.universities}
           light
-          breakpoints={{ 0: { slidesPerView: 2, spaceBetween: 12 }, 640: { slidesPerView: 3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }}
+          breakpoints={{ 0: { slidesPerView: 2.3, spaceBetween: 12 }, 640: { slidesPerView: 3.3, spaceBetween: 16 }, 1024: { slidesPerView: 5, spaceBetween: 16 }, 1280: { slidesPerView: 6, spaceBetween: 16 } }}
           renderItem={(u) => <UniversityLogoCard university={u} />}
         />
       </div>

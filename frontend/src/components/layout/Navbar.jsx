@@ -167,8 +167,9 @@ export default function Navbar() {
     <>
       <header className={cn('sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur transition-shadow', scrolled && 'shadow-[0_6px_24px_-12px_rgb(17_12_46/0.18)]')}>
         {/* Wider than .container-page: the menu is admin-defined and can hold many items. */}
-        <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:h-[76px] lg:px-8">
-          <SiteLogo nameClassName={setting('general.site_logo') ? 'xl:max-[1399px]:hidden' : undefined} />
+        <div className="mx-auto flex h-16 w-full max-w-[1440px] items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6 lg:h-[76px] lg:px-8">
+          {/* shrink: on 320px phones the name wraps instead of pushing the menu button off-screen. */}
+          <SiteLogo shrink nameClassName={cn('max-[359px]:text-[15px]', setting('general.site_logo') && 'xl:max-[1399px]:hidden')} />
 
           <nav className="hidden items-center xl:flex" aria-label="Main">
             {items.map((item) => (
@@ -176,7 +177,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-1.5 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-3">
             {searchEnabled && (
               <button type="button" onClick={() => setSearchOpen(true)} className="grid size-10 place-items-center rounded-full text-primary hover:bg-primary-50" aria-label="Search">
                 <Search className="size-5" />

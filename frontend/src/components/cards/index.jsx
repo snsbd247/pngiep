@@ -35,10 +35,10 @@ export function DestinationCard({ destination }) {
           <Flag code={destination.country_code} className="h-5 w-7 ring-2 ring-white" title={destination.name} />
         </span>
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-sm font-semibold sm:text-[15px]">{destination.name}</h3>
+          <h3 className="line-clamp-2 text-sm leading-snug font-semibold sm:text-[15px]">{destination.name}</h3>
           {destination.tagline && <p className="mt-0.5 line-clamp-2 text-xs text-slate-500">{destination.tagline}</p>}
         </div>
-        <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary-50 text-primary transition group-hover:bg-primary group-hover:text-white">
+        <span className="grid size-8 shrink-0 max-sm:hidden place-items-center rounded-full bg-primary-50 text-primary transition group-hover:bg-primary group-hover:text-white">
           <ArrowRight className="size-4" />
         </span>
       </div>
@@ -80,15 +80,18 @@ export function FeatureCard({ item, index = 0, href, className }) {
   const body = (
     <>
       {item.icon && (
-        <span className={cn('mb-4 grid size-12 place-items-center rounded-xl', toneAt(index))}>
+        <span className={cn('grid size-12 shrink-0 place-items-center rounded-xl sm:mb-4', toneAt(index))}>
           <AppIcon name={item.icon} className="size-6" />
         </span>
       )}
-      <h3 className="text-[15px] font-semibold">{item.title}</h3>
-      {item.text && <p className="mt-1.5 text-xs leading-relaxed text-slate-500 sm:text-[13px]">{item.text}</p>}
+      <div className="min-w-0">
+        <h3 className="text-[15px] font-semibold">{item.title}</h3>
+        {item.text && <p className="mt-1.5 text-xs leading-relaxed text-slate-500 sm:text-[13px]">{item.text}</p>}
+      </div>
     </>
   )
-  const cls = cn('flex h-full flex-col rounded-xl border border-slate-100 bg-white p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover', className)
+  // Phones: icon beside the text (compact list); wider: icon above.
+  const cls = cn('flex h-full items-center gap-4 rounded-xl border border-slate-100 bg-white p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-hover sm:flex-col sm:items-stretch sm:gap-0 sm:p-5', className)
   return href ? <SmartLink to={href} className={cls}>{body}</SmartLink> : <div className={cls}>{body}</div>
 }
 

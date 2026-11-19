@@ -8,8 +8,9 @@ import { cn } from '@/lib/utils'
  * the name is rendered as a wordmark (first word bold, rest regular).
  * `light`: dark backgrounds (footer). A logo without a dedicated light version
  * sits on a white badge so its colours stay readable.
+ * `shrink`: may narrow (the name wraps) so the header fits 320px phones.
  */
-export default function SiteLogo({ light = false, className, imgClassName, nameClassName }) {
+export default function SiteLogo({ light = false, shrink = false, className, imgClassName, nameClassName }) {
   const { setting } = useSite()
   const name = setting('general.site_name', '')
   const lightLogo = light && setting('general.site_logo_light')
@@ -18,7 +19,7 @@ export default function SiteLogo({ light = false, className, imgClassName, nameC
   const [first, ...rest] = name.split(' ')
 
   return (
-    <Link to="/" className={cn('flex min-w-0 shrink-0 items-center gap-2.5', className)} aria-label={name || 'Home'}>
+    <Link to="/" className={cn('flex min-w-0 items-center gap-2.5', shrink ? 'shrink' : 'shrink-0', className)} aria-label={name || 'Home'}>
       {logo && (
         <span className={cn('shrink-0', light && !lightLogo && 'rounded-xl bg-white p-1.5')}>
           <img src={logo} alt={showName ? '' : name} className={cn('h-10 w-auto max-w-[190px] object-contain md:h-12', imgClassName)} />
