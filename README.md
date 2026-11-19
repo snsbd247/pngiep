@@ -93,5 +93,6 @@ Live site: https://pngiep.com (cPanel, `~/riths` + `~/public_html`). Code: https
 - [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md): cPanel deployment, cron, SMTP, HTTPS, updates, backups, troubleshooting
 - [docs/ADMIN_MANUAL.md](docs/ADMIN_MANUAL.md): guide for office staff
 - [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md): pre-launch and regression checklist
+- [docs/SEO.md](docs/SEO.md): what the site does for SEO and what the company should do (Bangla)
 - [Plan.md](Plan.md), [UI.md](UI.md), [Database.md](Database.md), [development.md](development.md),
   [chathistory.md](chathistory.md): project plan, design, database, development history and chat log (Bangla)

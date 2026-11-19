@@ -104,6 +104,8 @@ class SettingSeeder extends Seeder
             ],
             'seo' => [
                 'seo_default_title' => ['label' => 'Default SEO title', 'value' => 'PNG International Education Portal | Study Abroad from Papua New Guinea'],
+                'seo_short_name' => ['label' => 'Short site name in page titles', 'value' => 'PNGIEP',
+                    'help' => 'Used instead of the full site name when "Page title | Site name" would be longer than 60 characters (what Google shows).'],
                 'seo_default_description' => ['label' => 'Default meta description', 'type' => 'textarea', 'value' => 'PNG International Education Portal in Port Moresby helps students study in India, Australia, Dubai and other countries, with admissions, study visa, passport, NID & birth certificate assistance and airline ticketing.'],
                 'seo_default_og_image' => ['label' => 'Default social share image', 'type' => 'image', 'help' => '1200×630 recommended.'],
                 'google_site_verification' => ['label' => 'Google site verification code', 'public' => false],

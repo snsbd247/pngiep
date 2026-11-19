@@ -127,3 +127,7 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 ### ৮.৬ রিভিউয়ের নিরাপত্তা ও ডেটা সমাধান ✅ (২০২৬-১১-১৯)
 - অংশ ৭-এর অগ্রাধিকার ১ ও ২-এর সব কাজ, README, ROADMAP, আর লগইন ছাড়া admin API-তে JSON 401।
 - এরপরের পূর্ণ সিকিউরিটি অ্যানালাইসিস: `docs/SECURITY_REPORT.md` (শুধু লোকালে)। সেখানে পাওয়া Webmail-এর ফাঁক (Admin অন্যের মেইলবক্স যুক্ত করতে পারত) ঠিক করা হয়েছে, কমিট `df916ff`।
+
+### ৮.৭ CSP ও SEO ✅ (২০২৬-১১-১৯)
+- Content-Security-Policy: প্রতি request-এ nonce + strict-dynamic (কমিট `3fd1f5c`)।
+- টেকনিক্যাল SEO ঠিক করা ও কোম্পানির করণীয়: [docs/SEO.md](docs/SEO.md)।

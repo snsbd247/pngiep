@@ -56,16 +56,22 @@ class SeoRoutes
             return ['schema' => [
                 '@context' => 'https://schema.org',
                 '@graph' => [
+                    // An education consultancy with an office: EducationalOrganization for what it
+                    // is, LocalBusiness so it can appear in local results ("study abroad Port Moresby").
                     array_filter([
-                        '@type' => 'EducationalOrganization',
+                        '@type' => ['EducationalOrganization', 'LocalBusiness'],
                         '@id' => url('/').'#organization',
                         'name' => $siteName(),
                         'url' => url('/'),
                         'logo' => $seo->assetUrl($settings->get('site_logo')),
-                        'description' => $settings->get('site_tagline'),
+                        'image' => $seo->assetUrl($settings->get('seo_default_og_image') ?: $settings->get('site_logo')),
+                        'description' => $settings->get('seo_default_description') ?: $settings->get('site_tagline'),
                         'email' => $settings->get('contact_email'),
                         'telephone' => $settings->get('contact_phone'),
-                        'address' => $settings->get('contact_address'),
+                        'address' => self::postalAddress($settings),
+                        'areaServed' => ($country = strtoupper((string) $settings->get('site_country')))
+                            ? ['@type' => 'Country', 'name' => class_exists(\Locale::class) ? (\Locale::getDisplayRegion("-{$country}", 'en') ?: $country) : $country]
+                            : null,
                         'sameAs' => $sameAs ?: null,
                     ]),
                     [
@@ -223,7 +229,9 @@ class SeoRoutes
             }
 
             if (isset(self::STATIC_ROUTES[$p['slug']])) {
-                return ['title' => self::STATIC_ROUTES[$p['slug']].' | '.$siteName()];
+                // Internal search results are thin, duplicate pages: crawl their links, don't index them.
+                return ['title' => self::STATIC_ROUTES[$p['slug']].' | '.$siteName()]
+                    + ($p['slug'] === 'search' ? ['robots' => 'noindex, follow'] : []);
             }
 
             return null; // → 404
@@ -256,6 +264,25 @@ class SeoRoutes
             'canonical' => $custom?->canonical_url,
             'schema' => $schema,
         ];
+    }
+
+    /**
+     * PostalAddress from Settings › Contact: the full address as street address, the city from
+     * "Short location" (text before the first comma) and the country code from Settings › General.
+     */
+    private static function postalAddress(SettingService $settings): ?array
+    {
+        $address = trim(preg_replace('/\s*\R\s*/', ', ', (string) $settings->get('contact_address')), " ,");
+        if ($address === '') {
+            return null;
+        }
+
+        return array_filter([
+            '@type' => 'PostalAddress',
+            'streetAddress' => $address,
+            'addressLocality' => trim(Str::before((string) $settings->get('contact_location'), ',')) ?: null,
+            'addressCountry' => strtoupper((string) $settings->get('site_country')) ?: null,
+        ]);
     }
 
     private static function breadcrumbs(SeoService $seo, array $items): array

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Support\CspNonce;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 /**
@@ -39,26 +40,104 @@ class SeoService
         ];
     }
 
+    /** Google shows about 60 characters of a title. */
+    public const TITLE_MAX = 60;
+
+    /**
+     * Section of the site each first URL segment belongs to, for breadcrumbs:
+     * segment => [label, URL]. Detail pages (/universities/x) get Home › Section › Page.
+     */
+    private const SECTIONS = [
+        'universities' => ['Universities', '/universities'],
+        'courses' => ['Courses', '/courses'],
+        'services' => ['Services', '/services'],
+        'success-stories' => ['Success Stories', '/success-stories'],
+        'blog' => ['Blog & Notice', '/blog'],
+        'news' => ['News', '/news'],
+        'team' => ['About Us', '/about'],
+        'gallery' => ['Gallery', '/gallery'],
+    ];
+
     public function forPath(string $path): array
     {
         $defaults = $this->defaults();
+        $notFound = ['status' => 404, 'title' => 'Page not found | '.$defaults['site_name'], 'robots' => 'noindex'];
         $meta = [];
+        $matched = false;
 
         if (Str::startsWith($path, '/admin')) {
             $meta = ['title' => 'Admin | '.$defaults['site_name'], 'robots' => 'noindex, nofollow'];
         } else {
             foreach ($this->resolvers as $pattern => $resolver) {
                 if (preg_match($pattern, $path, $matches)) {
-                    $meta = $resolver(array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY)) ?? ['status' => 404, 'title' => 'Page not found | '.$defaults['site_name'], 'robots' => 'noindex'];
+                    $matched = true;
+                    $meta = $resolver(array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY)) ?? $notFound;
                     break;
                 }
+            }
+            // File-like URLs no page uses (/wp-login.php, /.env.bak …) are real 404s, not the app shell.
+            if (! $matched && preg_match('#\.[A-Za-z0-9]{1,8}$#', $path)) {
+                $meta = $notFound;
             }
         }
 
         $meta = array_merge($defaults, array_filter($meta, fn ($v) => $v !== null && $v !== ''));
         $meta['canonical'] ??= url($path === '/' ? '/' : rtrim($path, '/'));
+        $meta['title'] = $this->fitTitle((string) $meta['title'], $defaults['site_name']);
+
+        if ($path !== '/' && ($meta['status'] ?? 200) === 200 && ! str_contains((string) $meta['robots'], 'noindex')) {
+            $meta['schema'] = $this->withBreadcrumbs($meta['schema'], $path, $meta['title'], $defaults['site_name']);
+        }
 
         return $meta;
+    }
+
+    /** "Page | Full Site Name" → "Page | Short Name" when the full form is longer than Google shows. */
+    public function fitTitle(string $title, string $siteName): string
+    {
+        $short = (string) $this->settings->get('seo_short_name', '');
+        $suffix = " | {$siteName}";
+
+        if (! Str::endsWith($title, $suffix) || mb_strlen($title) <= self::TITLE_MAX) {
+            return $title;
+        }
+
+        $page = Str::beforeLast($title, $suffix);
+        $shortened = $short !== '' ? "{$page} | {$short}" : $page;
+
+        // Still too long (e.g. a long course name): the page name alone.
+        return mb_strlen($shortened) <= self::TITLE_MAX ? $shortened : $page;
+    }
+
+    /** Adds a BreadcrumbList (Home › Section › Page) unless the page already has one. */
+    private function withBreadcrumbs(?array $schema, string $path, string $title, string $siteName): ?array
+    {
+        if ($schema && str_contains(json_encode($schema), '"BreadcrumbList"')) {
+            return $schema;
+        }
+
+        $name = trim(preg_replace('/\s*\|\s*[^|]*$/', '', $title)) ?: $siteName;
+        $segments = explode('/', trim($path, '/'));
+        $items = [['Home', '/']];
+        if (count($segments) > 1 && isset(self::SECTIONS[$segments[0]])) {
+            $items[] = self::SECTIONS[$segments[0]];
+        }
+        $items[] = [$name, $path];
+
+        $crumbs = [
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => collect($items)->values()->map(fn ($item, $i) => [
+                '@type' => 'ListItem', 'position' => $i + 1, 'name' => $item[0], 'item' => url($item[1]),
+            ])->all(),
+        ];
+
+        if (! $schema) {
+            return ['@context' => 'https://schema.org'] + $crumbs;
+        }
+
+        $graph = $schema['@graph'] ?? [Arr::except($schema, '@context')];
+
+        return ['@context' => 'https://schema.org', '@graph' => [...$graph, $crumbs]];
     }
 
     public function renderHead(array $meta): string

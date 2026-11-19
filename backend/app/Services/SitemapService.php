@@ -66,6 +66,10 @@ class SitemapService
         TeamMember::query()->active()->whereNotNull('slug')->tap($indexable)->orderBy('id')->get(['id', 'slug', 'updated_at'])
             ->each(fn ($m) => $entries->push($entry("/team/{$m->slug}", $m->updated_at, '0.5')));
 
+        // The homepage shows the latest content, so it changes whenever anything else does.
+        $latest = $entries->pluck('lastmod')->filter()->max();
+        $entries = $entries->map(fn ($e) => $e['loc'] === url('/') && ! $e['lastmod'] ? ['lastmod' => $latest] + $e : $e);
+
         return $entries->unique('loc')->values();
     }
 

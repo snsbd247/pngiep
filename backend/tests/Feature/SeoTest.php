@@ -52,7 +52,7 @@ class SeoTest extends TestCase
     public function test_homepage_has_organisation_schema_and_robots_points_to_sitemap(): void
     {
         $html = $this->get('/')->assertOk()->getContent();
-        $this->assertStringContainsString('"@type":"EducationalOrganization"', $html);
+        $this->assertStringContainsString('"@type":["EducationalOrganization","LocalBusiness"]', $html);
         $this->assertStringContainsString('"@type":"SearchAction"', $html);
 
         $this->get('/robots.txt')->assertOk()
@@ -76,5 +76,39 @@ class SeoTest extends TestCase
         $this->get('/')->assertHeaderMissing('Strict-Transport-Security')->assertHeaderMissing('Cross-Origin-Opener-Policy');
         $https = $this->get('https://localhost/')->assertHeader('Cross-Origin-Opener-Policy', 'same-origin')->assertHeader('Strict-Transport-Security');
         $this->assertStringEndsWith('; upgrade-insecure-requests', $https->headers->get('Content-Security-Policy'));
+    }
+
+    public function test_detail_pages_get_breadcrumbs_and_titles_fit_search_results(): void
+    {
+        $uk = Destination::query()->create(['name' => 'United Kingdom', 'slug' => 'uk', 'status' => 'published']);
+        University::query()->create(['destination_id' => $uk->id, 'name' => 'Oxford', 'slug' => 'oxford', 'type' => 'public', 'status' => 'published']);
+        $long = 'Bachelor of Business Administration with Honours in International Management';
+        University::query()->create(['destination_id' => $uk->id, 'name' => $long, 'slug' => 'long-name', 'type' => 'public', 'status' => 'published']);
+
+        $html = $this->get('/universities/oxford')->assertOk()->getContent();
+        $this->assertStringContainsString('"@type":"CollegeOrUniversity"', $html);
+        $this->assertStringContainsString('"@type":"BreadcrumbList"', $html);
+        $this->assertStringContainsString('"name":"Universities","item":"http://localhost/universities"', $html);
+        $this->assertMatchesRegularExpression('#<title>Oxford \| [^<]+</title>#', $html);
+
+        // Too long even with the short name: the page name alone.
+        $this->get('/universities/long-name')->assertSee("<title>{$long}</title>", false);
+        $title = app(\App\Services\SeoService::class)->fitTitle('Study in Australia from Papua New Guinea | PNG International Education Portal', 'PNG International Education Portal');
+        $this->assertSame('Study in Australia from Papua New Guinea | PNGIEP', $title);
+    }
+
+    public function test_local_business_schema_search_noindex_file_404s_and_clean_sitemap(): void
+    {
+        $home = $this->get('/')->getContent();
+        $this->assertStringContainsString('"@type":["EducationalOrganization","LocalBusiness"]', $home);
+        $this->assertStringContainsString('"@type":"PostalAddress"', $home);
+
+        $this->get('/search')->assertOk()->assertSee('content="noindex, follow"', false);
+        $this->get('/wp-login.php')->assertNotFound();
+        $this->get('/composer.json')->assertNotFound();
+
+        $sitemap = $this->get('/sitemap.xml')->assertOk()->assertHeaderMissing('Set-Cookie');
+        $this->assertMatchesRegularExpression('#<loc>http://localhost</loc><lastmod>[^<]+</lastmod>#', $sitemap->getContent());
+        $this->get('/robots.txt')->assertOk()->assertHeaderMissing('Set-Cookie');
     }
 }
