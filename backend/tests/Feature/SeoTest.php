@@ -97,6 +97,23 @@ class SeoTest extends TestCase
         $this->assertSame('Study in Australia from Papua New Guinea | PNGIEP', $title);
     }
 
+    public function test_course_schema_has_fee_duration_and_credential(): void
+    {
+        $uk = Destination::query()->create(['name' => 'United Kingdom', 'slug' => 'uk', 'status' => 'published']);
+        $uni = University::query()->create(['destination_id' => $uk->id, 'name' => 'Oxford', 'slug' => 'oxford', 'type' => 'public', 'status' => 'published']);
+        \App\Models\Course::query()->create([
+            'university_id' => $uni->id, 'name' => 'MBA', 'slug' => 'mba-oxford', 'study_level' => 'postgraduate', 'status' => 'published',
+            'degree_type' => 'MBA', 'duration_months' => 24, 'tuition_fee' => 45000, 'currency_code' => 'gbp', 'fee_period' => 'year',
+        ]);
+
+        $html = $this->get('/courses/mba-oxford')->assertOk()->getContent();
+        $this->assertStringContainsString('"@type":"Course"', $html);
+        $this->assertStringContainsString('"offers":{"@type":"Offer","category":"Paid","price":"45000","priceCurrency":"GBP","description":"Tuition fee per year"}', $html);
+        $this->assertStringContainsString('"timeRequired":"P24M"', $html);
+        $this->assertStringContainsString('"educationalCredentialAwarded":"MBA"', $html);
+        $this->assertStringContainsString('"url":"http://localhost/universities/oxford"', $html);
+    }
+
     public function test_local_business_schema_search_noindex_file_404s_and_clean_sitemap(): void
     {
         $home = $this->get('/')->getContent();

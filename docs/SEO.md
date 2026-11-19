@@ -9,7 +9,7 @@
 |---|---|
 | প্রতিটা পেজের meta | আলাদা `<title>`, description, canonical, Open Graph, Twitter card; Admin-এ প্রতিটা আইটেমের SEO প্যানেল দিয়ে বদলানো যায় |
 | Title-এর দৈর্ঘ্য | ৬০ অক্ষরের বেশি হলে "PNG International Education Portal"-এর বদলে ছোট নাম "PNGIEP" (Settings › SEO › Short site name); তাতেও লম্বা হলে শুধু পেজের নাম |
-| Structured data (JSON-LD) | হোম: EducationalOrganization + **LocalBusiness** (ঠিকানা, ফোন, ইমেইল, লোগো, সোশ্যাল), WebSite + সার্চ বক্স; বিশ্ববিদ্যালয়: CollegeOrUniversity; কোর্স: Course; সার্ভিস: Service; ব্লগ: BlogPosting/NewsArticle; নিউজ: NewsArticle; ডিরেক্টর: Person; **সব পেজে BreadcrumbList** |
+| Structured data (JSON-LD) | হোম: EducationalOrganization + **LocalBusiness** (ঠিকানা, ফোন, ইমেইল, লোগো, সোশ্যাল), WebSite + সার্চ বক্স; বিশ্ববিদ্যালয়: CollegeOrUniversity; কোর্স: Course (ফি, সময়কাল, ডিগ্রি, বিশ্ববিদ্যালয়); সার্ভিস: Service; ব্লগ: BlogPosting/NewsArticle; নিউজ: NewsArticle; ডিরেক্টর: Person; **সব পেজে BreadcrumbList** |
 | JavaScript-এর পরে | **ঠিক করা (২০২৬-১১-১৯):** আগে React চালু হয়ে canonical আর সব structured data মুছে দিত, তাই Google (যে JS চালিয়ে index করে) এগুলো দেখত না। এখন এগুলো থাকে; একটাই `<title>` |
 | Sitemap | `/sitemap.xml` (সব প্রকাশিত পেজ, lastmod সহ; noindex বাদ), robots.txt-এ লিংক; cookie ছাড়া, ১ ঘণ্টা ক্যাশ |
 | robots.txt | `/admin`, `/api/v1/admin/`, ব্যক্তিগত অ্যাপয়েন্টমেন্ট লিংক বন্ধ; **পাবলিক API (`/api/v1/`) খোলা**: Google পেজ রেন্ডার করতে এটা লাগে (আগে বন্ধ থাকায় Search Console "indexing issues" দেখাত, ২০২৬-১১-১৯ ঠিক করা)। Settings › SEO-র Custom robots.txt খালি রাখুন |
@@ -21,7 +21,7 @@
 ## ২. কোম্পানির করণীয় (সবচেয়ে বেশি প্রভাব এগুলোর)
 
 ### এখনই (একবার)
-0. **ডেমো কনটেন্ট সরান**: লাইভ সাইটে এখনো ৩০টা ডেমো কোর্স (নমুনা ফি), ৬টা বানানো success story, ৩টা testimonial, ৮টা ডেমো ব্লগ ও ডেমো গ্যালারি আছে (`php artisan app:demo-content list`)। আসল কনটেন্ট দিয়ে বদলে ডেমো মুছুন (`php artisan app:demo-content remove`)। বানানো গল্প বা রিভিউ বিশ্বাসযোগ্যতা আর র‍্যাংকিং দুটোই কমায়।
+0. **কনটেন্ট**: প্রথমে "ডেমো" হিসেবে যোগ করা কোর্স, স্টোরি, ব্লগ ও গ্যালারি কোম্পানি চূড়ান্ত ডাটা হিসেবে নিশ্চিত করেছে (২০২৬-১১-১৯), তাই সার্ভারে এদের "ডেমো" চিহ্ন সরানো হয়েছে; `app:demo-content remove` এগুলো আর মুছবে না। কোর্সের ফি ও সময়কাল এখন Google-এর Course schema-য় যায়, তাই ফি বদলালে Admin-এ হালনাগাদ রাখুন।
 1. **robots.txt আপডেট Google-কে জানান**: Search Console › Settings › robots.txt › "Request a recrawl" (Google robots.txt ২৪ ঘণ্টা পর্যন্ত ক্যাশে রাখে)। তারপর URL Inspection › Test live URL › Request indexing।
 2. **Google Search Console** (ইতিমধ্যে যুক্ত): Sitemaps-এ `https://pngiep.com/sitemap.xml` আবার Submit করুন। সার্ভার ১৯ নভেম্বর নতুন IP-তে গেছে; "Couldn't fetch" সাধারণত DNS আপডেটের পরে নিজেই ঠিক হয়। কয়েক দিন পরেও থাকলে URL Inspection › Test live URL দিয়ে sitemap পরীক্ষা করুন।
 2. **Google Business Profile** (business.google.com): "PNG International Education Portal", ক্যাটাগরি *Educational consultant*, ঠিক সেই ঠিকানা/ফোন যা সাইটে আছে, অফিস সময়, ছবি, ওয়েবসাইট লিংক। "study abroad Port Moresby"-এর মতো স্থানীয় সার্চে এটাই সবচেয়ে বড় প্রভাব ফেলে।

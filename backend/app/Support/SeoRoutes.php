@@ -120,13 +120,31 @@ class SeoRoutes
             if (! $c) {
                 return null;
             }
-            $schema = [
+            $schema = array_filter([
                 '@context' => 'https://schema.org',
                 '@type' => 'Course',
                 'name' => $c->name,
                 'description' => $c->short_description ?: Str::limit(strip_tags((string) $c->description), 300),
-                'provider' => ['@type' => 'CollegeOrUniversity', 'name' => $c->university?->name, 'sameAs' => $c->university?->website],
-            ];
+                'url' => url("/courses/{$c->slug}"),
+                'image' => $seo->assetUrl($c->image),
+                'provider' => array_filter([
+                    '@type' => 'CollegeOrUniversity',
+                    'name' => $c->university?->name,
+                    'url' => $c->university ? url("/universities/{$c->university->slug}") : null,
+                    'sameAs' => $c->university?->website,
+                ]),
+                'educationalCredentialAwarded' => $c->degree_type,
+                // ISO 8601 duration, e.g. 36 months → P36M.
+                'timeRequired' => $c->duration_months ? "P{$c->duration_months}M" : null,
+                // Tuition per fee period (usually per year), as entered in the admin panel.
+                'offers' => ($c->tuition_fee && $c->currency_code) ? array_filter([
+                    '@type' => 'Offer',
+                    'category' => 'Paid',
+                    'price' => (string) (float) $c->tuition_fee,
+                    'priceCurrency' => strtoupper($c->currency_code),
+                    'description' => $c->fee_period ? "Tuition fee per {$c->fee_period}" : null,
+                ]) : null,
+            ]);
 
             return self::meta($seo, $c, "{$c->name} at {$c->university?->name} | {$siteName()}", $c->short_description, $c->image, $schema);
         });
