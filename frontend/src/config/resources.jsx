@@ -7,6 +7,7 @@
  * lookups: option lists to load from /admin/lookups.
  * The API enforces the same validation; these rules only give instant feedback.
  */
+import FacebookCell from '@/components/admin/FacebookCell'
 
 const STATUS = { name: 'status', label: 'Status', type: 'select', required: true, side: true, default: 'published', options: [
   { value: 'published', label: 'Published' },
@@ -630,6 +631,7 @@ export const resources = {
       { key: 'category', header: 'Category', render: (r) => r.category?.name ?? '—' },
       { key: 'published_at', header: 'Published', render: (r) => (r.published_at ? new Date(r.published_at).toLocaleDateString() + (new Date(r.published_at) > new Date() ? ' (scheduled)' : '') : '—') },
       { key: 'is_featured', header: 'Featured', type: 'featured' },
+      { key: 'facebook', header: 'Facebook', render: (r) => <FacebookCell resource="blogs" row={r} /> },
       { key: 'status', header: 'Status', type: 'status' },
     ],
     fields: [
@@ -646,6 +648,7 @@ export const resources = {
       { name: 'author_name', label: 'Author name', type: 'text', side: true },
       FEATURED(),
       { name: 'featured_image', label: 'Featured image', type: 'image', side: true, folder: 'blog' },
+      { name: 'facebook_post', label: 'Post to Facebook', type: 'toggle', side: true, default: true, help: 'Posted to the Facebook Page with the featured image when published (Settings › Facebook).' },
       SEO,
     ],
   },
@@ -671,6 +674,7 @@ export const resources = {
       { key: 'published_at', header: 'Published', render: (r) => (r.published_at ? new Date(r.published_at).toLocaleDateString() + (new Date(r.published_at) > new Date() ? ' (scheduled)' : '') : '—') },
       { key: 'views_count', header: 'Views' },
       { key: 'is_featured', header: 'Featured', type: 'featured' },
+      { key: 'facebook', header: 'Facebook', render: (r) => <FacebookCell resource="news" row={r} /> },
       { key: 'status', header: 'Status', type: 'status' },
     ],
     fields: [
@@ -685,6 +689,7 @@ export const resources = {
       { name: 'author_name', label: 'Author name', type: 'text', side: true },
       FEATURED(),
       { name: 'featured_image', label: 'Featured image', type: 'image', side: true, folder: 'news' },
+      { name: 'facebook_post', label: 'Post to Facebook', type: 'toggle', side: true, default: true, help: 'Posted to the Facebook Page with the featured image when published (Settings › Facebook).' },
       SEO,
     ],
   },

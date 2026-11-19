@@ -23,6 +23,7 @@ class BlogRequest extends ContentRequest
             'tags.*' => ['string', 'max:50'],
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['boolean'],
+            'facebook_post' => ['boolean'],
             'status' => $this->status(),
             ...$this->seo(),
         ];

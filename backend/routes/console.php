@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\FacebookPublisher;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -10,6 +11,12 @@ use Illuminate\Support\Facades\Schedule;
 |   * * * * * /usr/local/bin/php /home/USER/app/artisan schedule:run >> /dev/null 2>&1
 | The queue is drained by a short-lived worker each minute instead of a daemon.
 */
+
+// Facebook auto-post: queue News/Blog entries whose publish time has come (runs before the worker).
+Schedule::call(fn () => app(FacebookPublisher::class)->queueDue())
+    ->everyMinute()
+    ->name('facebook-autopost')
+    ->withoutOverlapping(5);
 
 Schedule::command('queue:work --stop-when-empty --tries=3 --max-time=50')
     ->everyMinute()

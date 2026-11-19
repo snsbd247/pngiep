@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Bell, CalendarCheck, CheckCheck, FileText, Mail, Settings, Trash2, Trophy, UserRound } from 'lucide-react'
+import { Bell, CalendarCheck, CheckCheck, FileText, Mail, Settings, Share2, Trash2, Trophy, UserRound } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import Card from '@/components/admin/Card'
 import PageHeader from '@/components/admin/PageHeader'
@@ -21,6 +21,7 @@ export const NOTIFICATION_ICONS = {
   application: { icon: FileText, cls: 'bg-violet-50 text-violet-600' },
   message: { icon: Mail, cls: 'bg-indigo-50 text-indigo-600' },
   story: { icon: Trophy, cls: 'bg-amber-50 text-amber-600' },
+  social: { icon: Share2, cls: 'bg-blue-50 text-blue-600' },
 }
 
 /** Notifications › All / Unread (?filter=unread). */

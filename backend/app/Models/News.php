@@ -29,6 +29,8 @@ class News extends Model
             'is_featured' => 'boolean',
             'published_at' => 'datetime',
             'views_count' => 'integer',
+            'facebook_post' => 'boolean',
+            'facebook_posted_at' => 'datetime',
         ];
     }
 

@@ -20,6 +20,7 @@ export const settingsService = {
   get: () => http.get('/admin/settings').then((res) => res.data),
   update: (settings) => http.put('/admin/settings', { settings }),
   testMail: (email) => http.post('/admin/settings/test-mail', { email }),
+  testFacebook: () => http.post('/admin/settings/test-facebook'),
 }
 
 export const mediaService = {
@@ -30,6 +31,11 @@ export const mediaService = {
 }
 
 export const userService = createCrudService('/admin/users')
+
+/** Facebook auto-post: post / retry one News article or Blog post now. resource = 'news' | 'blogs' */
+export const facebookService = {
+  postNow: (resource, id) => http.post(`/admin/${resource}/${id}/facebook`),
+}
 
 /** Staff mailboxes on cPanel and one-click Webmail. */
 export const mailboxService = {

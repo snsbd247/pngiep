@@ -241,7 +241,7 @@ class ContentController extends Controller
 
             $words = str_word_count(strip_tags((string) $post->content));
 
-            return $post->makeHidden(['status', 'deleted_at', 'created_at', 'author_id'])->toArray() + [
+            return $post->makeHidden(['status', 'deleted_at', 'created_at', 'author_id', 'facebook_post', 'facebook_post_id', 'facebook_posted_at', 'facebook_error'])->toArray() + [
                 'reading_minutes' => max(1, (int) ceil($words / 200)),
                 'seo' => $post->seo?->only(['title', 'description', 'og_title', 'og_description', 'og_image', 'robots']),
                 'related' => Blog::query()->published()->whereKeyNot($post->id)
@@ -296,7 +296,7 @@ class ContentController extends Controller
 
             $words = str_word_count(strip_tags((string) $item->content));
 
-            return $item->makeHidden(['status', 'deleted_at', 'created_at', 'author_id'])->toArray() + [
+            return $item->makeHidden(['status', 'deleted_at', 'created_at', 'author_id', 'facebook_post', 'facebook_post_id', 'facebook_posted_at', 'facebook_error'])->toArray() + [
                 'reading_minutes' => max(1, (int) ceil($words / 200)),
                 'seo' => $item->seo?->only(['title', 'description', 'og_title', 'og_description', 'og_image', 'robots']),
                 'related' => News::query()->published()->whereKeyNot($item->id)

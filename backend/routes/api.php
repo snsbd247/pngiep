@@ -103,6 +103,7 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
                 Route::get('settings', [Admin\SettingController::class, 'index']);
                 Route::put('settings', [Admin\SettingController::class, 'update']);
                 Route::post('settings/test-mail', [Admin\SettingController::class, 'testMail'])->middleware('throttle:login');
+                Route::post('settings/test-facebook', [Admin\FacebookController::class, 'test'])->middleware('throttle:login');
             });
 
             Route::middleware('can:media.manage')->group(function () {
@@ -181,9 +182,11 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
                 Route::crud('blog-categories', Admin\Content\BlogCategoryController::class);
                 Route::crud('blog-tags', Admin\Content\BlogTagController::class);
                 Route::crud('blogs', Admin\Content\BlogController::class);
+                Route::post('blogs/{id}/facebook', [Admin\FacebookController::class, 'blog'])->whereNumber('id')->middleware('throttle:20,1');
             });
             Route::middleware('can:news.manage')->group(function () {
                 Route::crud('news', Admin\Content\NewsController::class);
+                Route::post('news/{id}/facebook', [Admin\FacebookController::class, 'news'])->whereNumber('id')->middleware('throttle:20,1');
             });
 
             // ------------------------------------------------ Business (Phase 5)

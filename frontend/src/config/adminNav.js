@@ -250,6 +250,7 @@ export const adminNav = [
       { label: 'SEO Settings', to: '/admin/settings/seo', permission: 'settings.manage' },
       { label: 'Appointment Settings', to: '/admin/settings/appointment', permission: 'settings.manage' },
       { label: 'Email / SMTP', to: '/admin/settings/email', permission: 'settings.manage' },
+      { label: 'Facebook Auto-post', to: '/admin/settings/facebook', permission: 'settings.manage' },
       { label: 'Email Templates', to: '/admin/content/email-templates', permission: 'settings.manage' },
       { label: 'Footer Settings', to: '/admin/settings/footer', permission: 'settings.manage' },
       { label: 'System Settings', to: '/admin/settings/system', permission: 'settings.manage' },

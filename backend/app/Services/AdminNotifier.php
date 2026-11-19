@@ -22,6 +22,7 @@ class AdminNotifier
         'application' => ['Applications', 'applications.manage'],
         'message' => ['Contact messages', 'contacts.manage'],
         'story' => ['Success story submissions', 'success_stories.manage'],
+        'social' => ['Facebook posting problems', 'settings.manage'],
     ];
 
     public function notify(string $type, string $title, ?string $body = null, ?string $url = null, ?Collection $extraRecipients = null): void

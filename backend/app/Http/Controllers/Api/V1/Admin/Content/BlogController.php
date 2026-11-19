@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Admin\CrudController;
 use App\Http\Requests\Admin\Content\BlogRequest;
 use App\Models\Blog;
 use App\Models\BlogTag;
+use App\Services\FacebookPublisher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
@@ -72,6 +73,8 @@ class BlogController extends CrudController
                 ->map(fn ($name) => BlogTag::query()->firstOrCreate(['slug' => Str::slug($name)], ['name' => $name])->id);
             $model->tags()->sync($ids);
         }
+
+        app(FacebookPublisher::class)->queueIfDue($model);
     }
 
     protected function transform(Model $model, bool $detail = false): array

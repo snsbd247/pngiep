@@ -133,6 +133,15 @@ class SettingSeeder extends Seeder
                 'mail_from_name' => ['label' => 'From name', 'public' => false],
                 'admin_notification_email' => ['label' => 'Admin notification email', 'type' => 'email', 'public' => false, 'help' => 'New leads, appointments and applications are sent here.'],
             ],
+            'facebook' => [
+                'facebook_autopost_enabled' => ['label' => 'Auto-post News & Blog to Facebook', 'type' => 'boolean', 'value' => false, 'public' => false,
+                    'help' => 'When on, each new published News article or Blog post (with "Post to Facebook" ticked) is posted to your Facebook Page with its image.'],
+                'facebook_page_id' => ['label' => 'Facebook Page ID', 'public' => false, 'help' => 'Facebook Page › About › Page transparency, or Meta Business Suite › Settings.'],
+                'facebook_page_token' => ['label' => 'Page access token', 'type' => 'password', 'public' => false, 'encrypted' => true,
+                    'help' => 'Long-lived Page token with pages_manage_posts and pages_read_engagement. Leave blank to keep the current token.'],
+                'facebook_caption' => ['label' => 'Post text', 'type' => 'textarea', 'public' => false, 'value' => "{title}\n\n{excerpt}\n\nRead more: {url}",
+                    'help' => '{title}, {excerpt} and {url} are replaced with the article\'s title, short description and link.'],
+            ],
             'forms' => [
                 'enquiry_destination_title' => ['label' => 'Destination enquiry form title', 'value' => 'Get Free Guidance for {name}', 'help' => '{name} is replaced with the destination name.'],
                 'enquiry_university_title' => ['label' => 'University enquiry form title', 'value' => 'Interested in Studying Here?'],

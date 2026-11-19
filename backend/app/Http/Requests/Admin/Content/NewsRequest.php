@@ -19,6 +19,7 @@ class NewsRequest extends ContentRequest
             'source_url' => $this->link(),
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['boolean'],
+            'facebook_post' => ['boolean'],
             'status' => $this->status(),
             ...$this->seo(),
         ];

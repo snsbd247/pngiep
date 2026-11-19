@@ -207,6 +207,18 @@ without a password. Deleting a user only unlinks the mailbox; the mail stays on 
 
 The token can manage the whole cPanel account: keep it only in `.env`, and delete it in cPanel if it leaks.
 
+### Facebook auto-post (optional)
+
+New published **News** and **Blog** entries (with *Post to Facebook* ticked, on by default) are posted to
+the company Facebook Page with their featured image, title, short description and link. Scheduled entries
+are posted when their date arrives. Entries that existed before this feature are not posted automatically;
+use **Post now** in the admin list. Failures show in the list (with the reason) and as an admin notification.
+
+Setup: **Admin › Settings › Facebook** shows the steps (Meta app, `pages_manage_posts` +
+`pages_read_engagement`, long-lived Page access token), then **Test connection** and turn on **Auto-post**.
+Needs the cron job (section 7), because posting runs in the queue. Facebook downloads the image from the
+live site, so it only works on the public domain, not on `localhost`.
+
 ---
 
 ## 9. HTTPS

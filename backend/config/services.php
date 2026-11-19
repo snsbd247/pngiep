@@ -35,6 +35,13 @@ return [
         ],
     ],
 
+    // Facebook Page auto-posting (Graph API). Page ID + token live in Admin › Settings › Facebook.
+    'facebook' => [
+        'graph_url' => 'https://graph.facebook.com',
+        'graph_version' => env('FACEBOOK_GRAPH_VERSION', 'v21.0'),
+        'timeout' => 30,
+    ],
+
     // Staff mailboxes on the cPanel account (UAPI). Empty URL/token = feature off.
     // The token can manage the whole cPanel account: keep it in .env only.
     'cpanel' => [

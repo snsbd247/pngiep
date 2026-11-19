@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Send } from 'lucide-react'
+import { Plug, Send } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ import { useApiErrorHandler } from '@/hooks/useApiForm'
 import { cn, headline } from '@/lib/utils'
 import { settingsService } from '@/services/admin'
 
-const GROUP_ORDER = ['general', 'header', 'contact', 'social', 'appearance', 'seo', 'appointment', 'email', 'footer']
+const GROUP_ORDER = ['general', 'header', 'contact', 'social', 'appearance', 'seo', 'appointment', 'email', 'facebook', 'footer']
 const GROUP_LABELS = { seo: 'SEO' }
 const groupLabel = (g) => GROUP_LABELS[g] ?? headline(g)
 
@@ -135,6 +135,31 @@ function SettingControl({ setting, control, register, errors, previews, setPrevi
     default:
       return <FormInput {...common} {...register(name)} />
   }
+}
+
+/** Settings › Facebook: connection test + the one-time Meta setup steps. */
+function FacebookSetupCard() {
+  const toast = useToast()
+  const mutation = useMutation({
+    mutationFn: () => settingsService.testFacebook(),
+    onSuccess: (res) => toast.success(res.message),
+    onError: (e) => toast.error(e.message),
+  })
+
+  return (
+    <Card title="Test & setup" description="Save the Page ID and token first, then test the connection.">
+      <Button onClick={() => mutation.mutate()} loading={mutation.isPending}>
+        <Plug className="size-4" /> Test connection
+      </Button>
+      <ol className="mt-5 list-decimal space-y-1.5 pl-5 text-sm text-slate-600">
+        <li>developers.facebook.com › My Apps › <strong>Create app</strong> (type: Business), signed in as a Page admin.</li>
+        <li>Add the permissions <code>pages_manage_posts</code> and <code>pages_read_engagement</code>, and switch the app to <strong>Live</strong>.</li>
+        <li>Graph API Explorer: select the app and your Page, generate a <strong>Page access token</strong>, then extend it to a long-lived token (Access Token Debugger › Extend).</li>
+        <li>Paste the Page ID and the token above, save, and press <strong>Test connection</strong>.</li>
+        <li>Turn on <strong>Auto-post</strong>. New published News and Blog entries with “Post to Facebook” ticked are posted within about a minute.</li>
+      </ol>
+    </Card>
+  )
 }
 
 function TestMailCard() {
@@ -257,6 +282,7 @@ export default function SettingsPage() {
               </Card>
             </form>
             {active === 'email' && <TestMailCard />}
+            {active === 'facebook' && <FacebookSetupCard />}
           </div>
         </div>
       )}

@@ -6,8 +6,10 @@ use App\Enums\ContentStatus;
 use App\Http\Controllers\Api\V1\Admin\CrudController;
 use App\Http\Requests\Admin\Content\NewsRequest;
 use App\Models\News;
+use App\Services\FacebookPublisher;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
 
 class NewsController extends CrudController
 {
@@ -53,5 +55,11 @@ class NewsController extends CrudController
         }
 
         return parent::prepare($data, $model);
+    }
+
+    protected function afterSave(Model $model, FormRequest $request): void
+    {
+        parent::afterSave($model, $request);
+        app(FacebookPublisher::class)->queueIfDue($model);
     }
 }
