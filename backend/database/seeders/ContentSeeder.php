@@ -9,7 +9,6 @@ use App\Models\HeroSlide;
 use App\Models\HomepageSection;
 use App\Models\HomepageStatistic;
 use App\Models\Page;
-use App\Models\Partner;
 use App\Models\Service;
 use App\Models\TeamMember;
 use App\Models\TimelineItem;
@@ -31,7 +30,6 @@ class ContentSeeder extends Seeder
         $this->heroSlides();
         $this->statistics();
         $this->services();
-        $this->partners();
         $this->team();
         $this->counsellors();
         $this->timeline();
@@ -346,24 +344,6 @@ class ContentSeeder extends Seeder
                 'status' => ContentStatus::Published->value,
                 'sort_order' => $i,
             ]);
-        }
-    }
-
-    private function partners(): void
-    {
-        if (Partner::query()->exists()) {
-            return;
-        }
-
-        foreach ([
-            ['Parul University', 'https://paruluniversity.ac.in'],
-            ['Lovely Professional University', 'https://www.lpu.in'],
-            ['Guru Kashi University', null],
-            ['Aditya Educational Institutions', null],
-            ['Britts Imperial University', null],
-            ['South Sydney College', null],
-        ] as $i => [$name, $website]) {
-            Partner::query()->create(['name' => $name, 'website' => $website, 'category' => 'university', 'sort_order' => $i, 'status' => 'published']);
         }
     }
 

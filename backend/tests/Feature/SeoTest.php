@@ -133,15 +133,28 @@ class SeoTest extends TestCase
             ->assertSee('Allow: /api/v1/');
     }
 
-    public function test_partner_without_logo_uses_the_matching_university_logo(): void
+    public function test_university_logo_strip_reads_universities_and_duplicate_partners_are_merged(): void
     {
         $uk = Destination::query()->create(['name' => 'United Kingdom', 'slug' => 'uk', 'status' => 'published']);
         University::query()->create(['destination_id' => $uk->id, 'name' => 'Oxford', 'slug' => 'oxford', 'type' => 'public', 'status' => 'published', 'logo' => 'media/universities/oxford.webp']);
-        \App\Models\Partner::query()->create(['name' => 'oxford', 'category' => 'university', 'status' => 'published']);
-        \App\Models\Partner::query()->create(['name' => 'Cambridge', 'logo' => 'media/partners/cam.webp', 'category' => 'university', 'status' => 'published']);
+        University::query()->create(['destination_id' => $uk->id, 'name' => 'Draft Uni', 'slug' => 'draft-uni', 'type' => 'public', 'status' => 'draft']);
+        $duplicate = \App\Models\Partner::query()->create(['name' => 'oxford', 'category' => 'University', 'status' => 'published']);
+        \App\Models\Partner::query()->create(['name' => 'Air Niugini', 'logo' => 'media/partners/air.webp', 'category' => 'Airline', 'status' => 'published']);
 
-        $partners = collect(app(\App\Services\ContentBlocks::class)->partners())->keyBy('name');
-        $this->assertSame('media/universities/oxford.webp', $partners['oxford']['logo']);
-        $this->assertSame('media/partners/cam.webp', $partners['Cambridge']['logo']);
+        $blocks = app(\App\Services\ContentBlocks::class);
+        $strip = collect($blocks->partners('University'))->keyBy('name');
+        $this->assertSame('media/universities/oxford.webp', $strip['Oxford']['logo']);
+        $this->assertSame('/universities/oxford', $strip['Oxford']['url']);
+        $this->assertFalse($strip->has('oxford'), 'the partner copy is not shown');
+        $this->assertFalse($strip->has('Draft Uni'));
+        $this->assertFalse($strip->has('Air Niugini'));
+
+        // No category: universities, then the other partners.
+        $this->assertSame(['Oxford', 'Air Niugini'], array_column($blocks->partners(), 'name'));
+        $this->assertSame(['Air Niugini'], array_column($blocks->partners('Airline'), 'name'));
+
+        (require database_path('migrations/2026_11_19_000007_merge_university_partners.php'))->up();
+        $this->assertModelMissing($duplicate);
+        $this->assertDatabaseHas('partners', ['name' => 'Air Niugini']);
     }
 }

@@ -125,22 +125,27 @@ class ContentBlocks
             ->get(['id', 'blog_category_id', 'type', 'title', 'slug', 'featured_image', 'excerpt', 'published_at'])->toArray();
     }
 
+    /**
+     * Logo strip ("Universities We Represent"). Universities are managed once, under Universities
+     * (logo, name, profile page), so the "University" category reads them directly; Partners holds
+     * only the other kinds of partner. No category = universities first, then the other partners.
+     */
     public function partners(?string $category = null, int $limit = 30): array
     {
-        $partners = Partner::query()->published()->ordered()->when($category, fn ($q) => $q->where('category', $category))->limit($limit)
-            ->get(['id', 'name', 'logo', 'website']);
+        $isUniversity = fn (?string $c) => $c !== null && strcasecmp(trim($c), 'university') === 0;
 
-        // A partner without its own logo uses the logo (and website) of the university with the same name,
-        // so logos uploaded under Universities show in "Universities We Represent" too.
-        $missing = $partners->filter(fn (Partner $p) => ! $p->logo || ! $p->website)->map(fn (Partner $p) => mb_strtolower($p->name));
-        $universities = $missing->isEmpty() ? collect() : University::query()->whereIn(\DB::raw('LOWER(name)'), $missing->values())
-            ->get(['name', 'logo', 'website'])->keyBy(fn (University $u) => mb_strtolower($u->name));
+        $universities = ($category === null || $isUniversity($category))
+            ? University::query()->published()->ordered()->limit($limit)->get(['id', 'name', 'slug', 'logo'])
+                ->map(fn (University $u) => ['id' => 'university-'.$u->id, 'name' => $u->name, 'logo' => $u->logo, 'website' => null, 'url' => "/universities/{$u->slug}"])
+            : collect();
 
-        return $partners->map(function (Partner $p) use ($universities) {
-            $uni = $universities->get(mb_strtolower($p->name));
+        $others = $isUniversity($category) ? collect() : Partner::query()->published()->ordered()
+            ->when($category, fn ($q) => $q->where('category', $category))
+            ->limit($limit)->get(['id', 'name', 'logo', 'website', 'category'])
+            ->reject(fn (Partner $p) => $isUniversity($p->category))
+            ->map(fn (Partner $p) => ['id' => $p->id, 'name' => $p->name, 'logo' => $p->logo, 'website' => $p->website, 'url' => null]);
 
-            return ['id' => $p->id, 'name' => $p->name, 'logo' => $p->logo ?: $uni?->logo, 'website' => $p->website ?: $uni?->website];
-        })->all();
+        return $universities->concat($others)->take($limit)->values()->all();
     }
 
     public function team(?int $limit = null): array

@@ -747,6 +747,7 @@ export const resources = {
   partners: {
     title: 'Partners',
     singular: 'partner',
+    description: 'Non-university partners (agencies, airlines, organisations). Universities are shown from Universities: add or change them there.',
     permission: 'partners.manage',
     sortable: true,
     searchable: true,

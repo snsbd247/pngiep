@@ -1,5 +1,6 @@
 import { assetUrl } from '@/lib/utils'
 import Carousel from './Carousel'
+import SmartLink from '@/components/ui/SmartLink'
 
 function PartnerLogo({ partner }) {
   const inner = partner.logo ? (
@@ -9,6 +10,9 @@ function PartnerLogo({ partner }) {
   )
 
   const cls = 'flex h-24 items-center justify-center rounded-xl border border-slate-100 bg-white px-5 transition hover:border-primary-200 hover:shadow-card'
+  if (partner.url) {
+    return <SmartLink to={partner.url} className={cls} title={partner.name}>{inner}</SmartLink>
+  }
   return partner.website ? (
     <a href={partner.website} target="_blank" rel="noopener noreferrer" className={cls} title={partner.name}>{inner}</a>
   ) : (
@@ -16,7 +20,7 @@ function PartnerLogo({ partner }) {
   )
 }
 
-/** Auto-scrolling partner logos. Without an uploaded logo the partner name is shown. */
+/** Auto-scrolling partner logos (universities link to their page). Without a logo the name is shown. */
 export default function PartnerLogoSlider({ partners = [] }) {
   return (
     <Carousel
