@@ -28,3 +28,6 @@ backend/storage/logs/*.log
 Thumbs.db
 .idea/
 .vscode/
+
+# Security report lists open issues: keep it local, never in the public repo
+docs/SECURITY_REPORT.md

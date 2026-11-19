@@ -63,7 +63,7 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 - Git: `snsbd247/pngiep` › `main`, প্রতিটা ফিচার আলাদা কমিটে
 - লাইভ: https://pngiep.com (cPanel সার্ভার 169.40.116.146-এ মাইগ্রেট হয়েছে); লোকাল: `F:\Lovable\xampp` (Apache/MySQL Windows সার্ভিস), `localhost/riths`
 - নতুন ফিচার: News, YouTube embed, Webmail (cPanel টোকেন বসানো, চালু), Facebook auto-post (Meta App সেটআপ বাকি), ডিরেক্টর প্রোফাইল
-- সিকিউরিটি অ্যানালাইসিস রিপোর্ট: [docs/SECURITY_REPORT.md](docs/SECURITY_REPORT.md)
+- সিকিউরিটি অ্যানালাইসিস রিপোর্ট: `docs/SECURITY_REPORT.md` (শুধু লোকালে; খোলা দুর্বলতা থাকায় পাবলিক রিপোতে রাখা হয় না)
 
 ## ৭. পরবর্তী পরিকল্পনা: রিভিউ থেকে পাওয়া কাজ (অগ্রাধিকার অনুযায়ী)
 
@@ -126,4 +126,4 @@ study-abroad consultancy প্রতিষ্ঠান। এর জন্য �
 
 ### ৮.৬ রিভিউয়ের নিরাপত্তা ও ডেটা সমাধান ✅ (২০২৬-১১-১৯)
 - অংশ ৭-এর অগ্রাধিকার ১ ও ২-এর সব কাজ, README, ROADMAP, আর লগইন ছাড়া admin API-তে JSON 401।
-- এরপরের পূর্ণ সিকিউরিটি অ্যানালাইসিস: [docs/SECURITY_REPORT.md](docs/SECURITY_REPORT.md)।
+- এরপরের পূর্ণ সিকিউরিটি অ্যানালাইসিস: `docs/SECURITY_REPORT.md` (শুধু লোকালে)। সেখানে পাওয়া Webmail-এর ফাঁক (Admin অন্যের মেইলবক্স যুক্ত করতে পারত) ঠিক করা হয়েছে, কমিট `df916ff`।
