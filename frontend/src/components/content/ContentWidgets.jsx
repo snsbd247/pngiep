@@ -1,4 +1,4 @@
-import { ArrowRight, CalendarDays, Check, Copy, Images, Link2, Mail } from 'lucide-react'
+import { ArrowRight, CalendarDays, Check, Copy, Images, Link2, Mail, Play } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppIcon from '@/components/ui/AppIcon'
@@ -250,6 +250,11 @@ export function StoryCard({ story }) {
         {story.destination && (
           <span className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-xs font-medium text-ink shadow">
             <Flag code={story.destination.country_code} className="h-3 w-4" /> {story.destination.name}
+          </span>
+        )}
+        {story.youtube_id && (
+          <span className="absolute top-3 right-3 flex items-center gap-1 rounded-md bg-black/65 px-2 py-1 text-[11px] font-medium text-white" title="Includes a video testimonial">
+            <Play className="size-3.5 fill-current" /> Video
           </span>
         )}
       </div>

@@ -1,7 +1,8 @@
 import Image from '@tiptap/extension-image'
+import Youtube from '@tiptap/extension-youtube'
 import { EditorContent, useEditor, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { Bold, Heading2, Heading3, ImagePlus, Italic, Link2, List, ListOrdered, Quote, Redo2, RemoveFormatting, Undo2 } from 'lucide-react'
+import { Bold, Heading2, Heading3, ImagePlus, Italic, Link2, List, ListOrdered, Quote, Redo2, RemoveFormatting, SquarePlay, Undo2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import MediaPickerModal from '@/components/admin/MediaPickerModal'
 import { cn } from '@/lib/utils'
@@ -25,7 +26,7 @@ function ToolButton({ active, onClick, label, children, disabled }) {
 
 /**
  * WYSIWYG editor (TipTap) that reads/writes HTML. The API purifies the HTML on save,
- * so only safe markup (headings, lists, links, images, quotes) is ever stored.
+ * so only safe markup (headings, lists, links, images, quotes, YouTube embeds) is ever stored.
  */
 export default function RichTextEditor({ value, onChange, placeholder, invalid, minHeight = 220 }) {
   const [mediaOpen, setMediaOpen] = useState(false)
@@ -34,6 +35,8 @@ export default function RichTextEditor({ value, onChange, placeholder, invalid, 
     extensions: [
       StarterKit.configure({ heading: { levels: [2, 3, 4] }, link: { openOnClick: false, autolink: true, protocols: ['http', 'https', 'mailto', 'tel'] } }),
       Image,
+      // Privacy-friendly youtube-nocookie embeds; the API only keeps YouTube iframes.
+      Youtube.configure({ nocookie: true, width: 640, height: 360, rel: 0 }),
     ],
     content: value || '',
     editorProps: {
@@ -77,6 +80,14 @@ export default function RichTextEditor({ value, onChange, placeholder, invalid, 
     else editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
+  const addVideo = () => {
+    const url = window.prompt('YouTube video link (youtube.com/watch?v=…, youtu.be/… or /shorts/…)')
+    if (!url) return
+    if (!editor.chain().focus().setYoutubeVideo({ src: url.trim() }).run()) {
+      window.alert('That does not look like a YouTube video link.')
+    }
+  }
+
   return (
     <div className={cn('overflow-hidden rounded-xl border bg-white focus-within:ring-4', invalid ? 'border-rose-400 focus-within:ring-rose-100' : 'border-slate-200 focus-within:border-primary focus-within:ring-primary-100')}>
       <div className="flex flex-wrap gap-0.5 border-b border-slate-100 bg-slate-50/80 p-1.5">
@@ -89,6 +100,7 @@ export default function RichTextEditor({ value, onChange, placeholder, invalid, 
         <ToolButton label="Quote" active={state.quote} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="size-4" /></ToolButton>
         <ToolButton label="Link" active={state.link} onClick={setLink}><Link2 className="size-4" /></ToolButton>
         <ToolButton label="Insert image" onClick={() => setMediaOpen(true)}><ImagePlus className="size-4" /></ToolButton>
+        <ToolButton label="Insert YouTube video" onClick={addVideo}><SquarePlay className="size-4" /></ToolButton>
         <ToolButton label="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}><RemoveFormatting className="size-4" /></ToolButton>
         <span className="mx-1 w-px bg-slate-200" />
         <ToolButton label="Undo" disabled={!state.canUndo} onClick={() => editor.chain().focus().undo().run()}><Undo2 className="size-4" /></ToolButton>

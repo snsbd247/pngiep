@@ -16,6 +16,7 @@ use App\Models\SuccessStory;
 use App\Services\AdminNotifier;
 use App\Support\ApiResponse;
 use App\Support\PublicCache;
+use App\Support\YouTube;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -101,6 +102,11 @@ class ContentController extends Controller
             'university' => ['nullable', 'string', 'max:190'],
             'course' => ['nullable', 'string', 'max:190'],
             'story' => ['required', 'string', 'min:20', 'max:5000'],
+            'video_url' => ['nullable', 'string', 'max:255', function (string $attribute, mixed $value, \Closure $fail) {
+                if ($value && ! YouTube::isValid($value)) {
+                    $fail('Enter a valid YouTube video link.');
+                }
+            }],
             'website' => ['prohibited'],
         ], ['website.prohibited' => 'Your story could not be sent.']);
 
@@ -114,6 +120,9 @@ class ContentController extends Controller
             // Plain text only: escape and keep paragraphs.
             'story' => collect(preg_split('/\R{2,}/', trim($data['story'])))->map(fn ($p) => '<p>'.nl2br(e(trim($p))).'</p>')->implode(''),
             'excerpt' => Str::limit($data['story'], 200),
+            // Shown only after an admin publishes the story (it is saved as a draft).
+            'video_url' => ($data['video_url'] ?? null) ?: null,
+            'youtube_id' => YouTube::id($data['video_url'] ?? null),
             'status' => ContentStatus::Draft->value,
         ]);
 

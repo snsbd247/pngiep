@@ -145,6 +145,13 @@ body.admin-theme {
   .prose-content img {
     @apply my-6 rounded-2xl;
   }
+  /* YouTube embeds from the rich-text editor: full width, 16:9, any screen size. */
+  .prose-content div[data-youtube-video] {
+    @apply my-6;
+  }
+  .prose-content div[data-youtube-video] iframe {
+    @apply block aspect-video h-auto w-full rounded-2xl border-0 bg-slate-900;
+  }
   .prose-content blockquote {
     @apply my-6 border-l-4 border-primary-300 bg-primary-50 px-5 py-3 italic;
   }

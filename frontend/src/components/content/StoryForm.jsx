@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle2, GraduationCap, Landmark, Mail, MessageSquare, User } from 'lucide-react'
+import { BookOpen, CheckCircle2, GraduationCap, Landmark, Mail, MessageSquare, SquarePlay, User } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Button from '@/components/ui/Button'
@@ -55,6 +55,9 @@ export default function StoryForm({ destinations = [] }) {
           <div className="relative"><MessageSquare className="absolute top-3.5 left-3.5 size-4 text-slate-400" />
             <textarea rows={4} className={cn(input(errors.story), 'h-auto py-2.5')} placeholder="Your Story (Brief)" aria-label="Your Story"
               {...register('story', { required: 'Please tell us your story.', minLength: { value: 20, message: 'Please write at least 20 characters.' } })} />{err('story')}</div>
+          <div className="relative"><SquarePlay className="absolute top-3.5 left-3.5 size-4 text-slate-400" />
+            <input type="url" className={input(errors.video_url)} placeholder="YouTube Video Link (optional)" aria-label="YouTube video link (optional)"
+              {...register('video_url', { pattern: { value: /^(https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\/.+/i, message: 'Enter a YouTube video link.' } })} />{err('video_url')}</div>
           {errors.root && <p className="text-xs text-rose-200">{errors.root.message}</p>}
           <Button type="submit" variant="white" className="w-full" loading={isSubmitting}>{setting('forms.story_form_button', 'Submit')}</Button>
         </form>
