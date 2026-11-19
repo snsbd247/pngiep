@@ -127,8 +127,20 @@ class ContentBlocks
 
     public function partners(?string $category = null, int $limit = 30): array
     {
-        return Partner::query()->published()->ordered()->when($category, fn ($q) => $q->where('category', $category))->limit($limit)
-            ->get(['id', 'name', 'logo', 'website'])->toArray();
+        $partners = Partner::query()->published()->ordered()->when($category, fn ($q) => $q->where('category', $category))->limit($limit)
+            ->get(['id', 'name', 'logo', 'website']);
+
+        // A partner without its own logo uses the logo (and website) of the university with the same name,
+        // so logos uploaded under Universities show in "Universities We Represent" too.
+        $missing = $partners->filter(fn (Partner $p) => ! $p->logo || ! $p->website)->map(fn (Partner $p) => mb_strtolower($p->name));
+        $universities = $missing->isEmpty() ? collect() : University::query()->whereIn(\DB::raw('LOWER(name)'), $missing->values())
+            ->get(['name', 'logo', 'website'])->keyBy(fn (University $u) => mb_strtolower($u->name));
+
+        return $partners->map(function (Partner $p) use ($universities) {
+            $uni = $universities->get(mb_strtolower($p->name));
+
+            return ['id' => $p->id, 'name' => $p->name, 'logo' => $p->logo ?: $uni?->logo, 'website' => $p->website ?: $uni?->website];
+        })->all();
     }
 
     public function team(?int $limit = null): array

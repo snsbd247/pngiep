@@ -132,4 +132,16 @@ class SeoTest extends TestCase
             ->assertSee('Disallow: /api/v1/admin/')
             ->assertSee('Allow: /api/v1/');
     }
+
+    public function test_partner_without_logo_uses_the_matching_university_logo(): void
+    {
+        $uk = Destination::query()->create(['name' => 'United Kingdom', 'slug' => 'uk', 'status' => 'published']);
+        University::query()->create(['destination_id' => $uk->id, 'name' => 'Oxford', 'slug' => 'oxford', 'type' => 'public', 'status' => 'published', 'logo' => 'media/universities/oxford.webp']);
+        \App\Models\Partner::query()->create(['name' => 'oxford', 'category' => 'university', 'status' => 'published']);
+        \App\Models\Partner::query()->create(['name' => 'Cambridge', 'logo' => 'media/partners/cam.webp', 'category' => 'university', 'status' => 'published']);
+
+        $partners = collect(app(\App\Services\ContentBlocks::class)->partners())->keyBy('name');
+        $this->assertSame('media/universities/oxford.webp', $partners['oxford']['logo']);
+        $this->assertSame('media/partners/cam.webp', $partners['Cambridge']['logo']);
+    }
 }
