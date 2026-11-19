@@ -115,6 +115,13 @@ Route::prefix('v1')->middleware('throttle:api')->group(function () {
                 Route::apiResource('users', Admin\UserController::class);
             });
 
+            // Staff mailboxes on cPanel + one-click Webmail for the signed-in user.
+            Route::middleware('can:mailboxes.manage')->group(function () {
+                Route::get('mailboxes/status', [Admin\MailboxController::class, 'status'])->middleware('throttle:60,1');
+                Route::delete('users/{user}/mailbox', [Admin\MailboxController::class, 'unlink']);
+            });
+            Route::post('webmail/session', [Admin\MailboxController::class, 'webmail'])->middleware(['can:webmail.access', 'throttle:20,1']);
+
             Route::middleware('can:roles.manage')->group(function () {
                 Route::get('roles', [Admin\RoleController::class, 'index']);
                 Route::put('roles/{role}', [Admin\RoleController::class, 'update']);

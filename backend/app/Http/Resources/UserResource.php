@@ -30,6 +30,8 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
             'avatar_url' => $this->avatar ? Storage::disk('public')->url($this->avatar) : null,
             'is_active' => $this->is_active,
+            'mailbox' => $this->mailbox,
+            'mailbox_linked_at' => $this->mailbox_linked_at?->toIso8601String(),
             'role' => $this->whenLoaded('role', fn () => $this->role ? [
                 'id' => $this->role->id,
                 'name' => $this->role->name,

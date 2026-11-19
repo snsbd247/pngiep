@@ -184,6 +184,29 @@ On the same page, set **Admin notification email**: new leads, appointments and 
 are sent to this address. Then use **Settings › Appointment** to set the booking timezone,
 working days, minimum notice and cancellation notice.
 
+### Staff mailboxes and Webmail (optional)
+
+When a user is created in **Admin › Users** with an address on your domain (e.g. `name@pngiep.com`),
+the app checks cPanel: a missing mailbox is created (1 GB by default, password shown once), an existing
+one is only linked. Linked users get a **Webmail** button in the admin top bar that opens Roundcube
+without a password. Deleting a user only unlinks the mailbox; the mail stays on the server.
+
+1. cPanel › **Manage API Tokens** › *Create*, e.g. name `pngiep-app`. Copy the token (shown once).
+2. Add to `.env` and run `php artisan config:cache`:
+   ```dotenv
+   CPANEL_URL=https://your-server-hostname:2083
+   CPANEL_USER=USER
+   CPANEL_API_TOKEN=the-token
+   CPANEL_WEBMAIL_URL=https://your-server-hostname:2096
+   MAILBOX_DOMAIN=pngiep.com
+   MAILBOX_QUOTA_MB=1024
+   ```
+   Use the server's own hostname (it has a valid SSL certificate on ports 2083/2096).
+3. Permissions: **mailboxes.manage** (create/link/delete mailboxes, Admin role) and
+   **webmail.access** (open your own mailbox; Admin, Content Manager and Counsellor roles).
+
+The token can manage the whole cPanel account: keep it only in `.env`, and delete it in cPanel if it leaks.
+
 ---
 
 ## 9. HTTPS

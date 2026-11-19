@@ -31,6 +31,15 @@ export const mediaService = {
 
 export const userService = createCrudService('/admin/users')
 
+/** Staff mailboxes on cPanel and one-click Webmail. */
+export const mailboxService = {
+  /** → { status: 'available' | 'exists' | 'external' | 'unconfigured', domain } */
+  status: (email) => http.get('/admin/mailboxes/status', { params: { email } }).then((res) => res.data),
+  unlink: (userId, deleteMailbox = false) => http.delete(`/admin/users/${userId}/mailbox`, { params: deleteMailbox ? { delete: 1 } : {} }),
+  /** → { url, session } for a one-time Webmail login. */
+  webmailSession: () => http.post('/admin/webmail/session').then((res) => res.data),
+}
+
 export const roleService = {
   list: () => http.get('/admin/roles').then((res) => res.data),
   options: () => http.get('/admin/roles/options').then((res) => res.data),

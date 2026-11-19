@@ -43,6 +43,10 @@ return [
         'applications' => ['applications.manage' => 'Manage applications'],
         'contacts' => ['contacts.manage' => 'Manage contact messages'],
         'newsletter' => ['newsletter.manage' => 'Manage newsletter subscribers'],
+        'webmail' => [
+            'webmail.access' => 'Open own webmail',
+            'mailboxes.manage' => 'Create and link staff mailboxes',
+        ],
     ],
 
     // Default role → permission mapping used by the seeder. "*" = every permission.
@@ -60,13 +64,13 @@ return [
                 'dashboard.view', 'media.manage', 'menus.manage', 'pages.manage', 'homepage.manage',
                 'destinations.manage', 'universities.manage', 'courses.manage', 'services.manage',
                 'success_stories.manage', 'testimonials.manage', 'partners.manage', 'faqs.manage',
-                'gallery.manage', 'blogs.manage', 'news.manage',
+                'gallery.manage', 'blogs.manage', 'news.manage', 'webmail.access',
             ],
         ],
         'counsellor' => [
             'name' => 'Counsellor',
             'description' => 'Sees and manages only their own appointments.',
-            'permissions' => ['dashboard.view', 'appointments.view'],
+            'permissions' => ['dashboard.view', 'appointments.view', 'webmail.access'],
         ],
     ],
 ];

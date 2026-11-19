@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    // Staff mailboxes on the cPanel account (UAPI). Empty URL/token = feature off.
+    // The token can manage the whole cPanel account: keep it in .env only.
+    'cpanel' => [
+        'url' => env('CPANEL_URL'),                  // e.g. https://server.example.com:2083
+        'user' => env('CPANEL_USER'),
+        'token' => env('CPANEL_API_TOKEN'),
+        'webmail_url' => env('CPANEL_WEBMAIL_URL'),  // e.g. https://server.example.com:2096
+        'mail_domain' => env('MAILBOX_DOMAIN'),      // e.g. pngiep.com
+        'quota_mb' => (int) env('MAILBOX_QUOTA_MB', 1024),
+        'verify_ssl' => (bool) env('CPANEL_VERIFY_SSL', true),
+        'timeout' => 20,
+    ],
+
 ];

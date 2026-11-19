@@ -19,6 +19,8 @@ class UserRequest extends FormRequest
             'role_id' => ['required', 'integer', 'exists:roles,id'],
             'is_active' => ['boolean'],
             'password' => [$userId ? 'nullable' : 'required', 'confirmed', Password::min(8)->letters()->numbers()],
+            // Set up / keep a staff mailbox for this address (needs mailboxes.manage; see StaffMailbox).
+            'mailbox' => ['sometimes', 'boolean'],
         ];
     }
 }

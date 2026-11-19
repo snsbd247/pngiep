@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Bell, ChevronDown, ExternalLink, LogOut, Maximize, Menu, Minimize, Search, Settings, UserRound } from 'lucide-react'
+import { Bell, ChevronDown, ExternalLink, LogOut, Mail, Maximize, Menu, Minimize, Search, Settings, UserRound } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Avatar from '@/components/admin/Avatar'
@@ -10,7 +10,7 @@ import { useSite } from '@/context/SiteContext'
 import { withBase } from '@/lib/base'
 import { cn, formatDateTime } from '@/lib/utils'
 import { NOTIFICATION_ICONS } from '@/pages/admin/NotificationsPage'
-import { adminSearchService, notificationService } from '@/services/admin'
+import { adminSearchService, mailboxService, notificationService } from '@/services/admin'
 
 /** Closes a popover on outside click or Escape. */
 function usePopover() {
@@ -239,6 +239,57 @@ function UserMenu() {
   )
 }
 
+/**
+ * Opens the signed-in user's own mailbox in Roundcube via a one-time cPanel session
+ * (POSTed in a new tab, so no mailbox password is needed). Hidden without a linked mailbox.
+ */
+function WebmailButton() {
+  const { user, can } = useAuth()
+  const toast = useToast()
+  const [busy, setBusy] = useState(false)
+  if (!user?.mailbox || !can('webmail.access')) return null
+
+  const open = async () => {
+    // Open the tab first (inside the click) so pop-up blockers allow it.
+    const tab = window.open('about:blank', 'pngiep-webmail')
+    if (tab) tab.opener = null
+    setBusy(true)
+    try {
+      const { url, session } = await mailboxService.webmailSession()
+      const form = document.createElement('form')
+      form.method = 'POST'
+      form.action = url
+      form.target = 'pngiep-webmail'
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = 'session'
+      input.value = session
+      form.appendChild(input)
+      document.body.appendChild(form)
+      form.submit()
+      form.remove()
+    } catch (e) {
+      tab?.close()
+      toast.error(e.message || 'Could not open Webmail.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={open}
+      disabled={busy}
+      title={`Webmail: ${user.mailbox}`}
+      className="flex h-[34px] items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-[12.5px] font-medium text-slate-700 hover:border-primary hover:text-primary disabled:opacity-60"
+    >
+      <Mail className="size-[15px] text-primary" />
+      <span className="hidden sm:inline">Webmail</span>
+    </button>
+  )
+}
+
 export default function Topbar({ onMenu }) {
   const { setting } = useSite()
 
@@ -259,6 +310,7 @@ export default function Topbar({ onMenu }) {
           Visit Website
           <ExternalLink className="size-[15px] text-primary" />
         </a>
+        <WebmailButton />
         <Notifications />
         <FullscreenToggle />
         <span className="mx-1 hidden h-8 w-px bg-slate-200 sm:block" />

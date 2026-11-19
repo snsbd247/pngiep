@@ -29,6 +29,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'mailbox_linked_at' => 'datetime',
+            'mailbox_created' => 'boolean',
             'is_active' => 'boolean',
             'password' => 'hashed',
             'notification_preferences' => 'array',
