@@ -109,6 +109,10 @@ class SeoTest extends TestCase
 
         $sitemap = $this->get('/sitemap.xml')->assertOk()->assertHeaderMissing('Set-Cookie');
         $this->assertMatchesRegularExpression('#<loc>http://localhost</loc><lastmod>[^<]+</lastmod>#', $sitemap->getContent());
-        $this->get('/robots.txt')->assertOk()->assertHeaderMissing('Set-Cookie');
+        // Google renders the React pages, whose content comes from the public API: it must not be blocked.
+        $this->get('/robots.txt')->assertOk()->assertHeaderMissing('Set-Cookie')
+            ->assertDontSee("Disallow: /api/\n", false)
+            ->assertSee('Disallow: /api/v1/admin/')
+            ->assertSee('Allow: /api/v1/');
     }
 }

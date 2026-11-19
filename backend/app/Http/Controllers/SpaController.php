@@ -68,11 +68,15 @@ class SpaController extends Controller
     {
         $custom = $settings->get('robots_txt');
         $base = $request->getBaseUrl(); // "" at a domain root, "/riths" in a sub-folder
+        // The public API must stay crawlable: Google renders the React pages and their content
+        // comes from /api/v1/…; blocking it leaves Google with empty / error pages ("indexing
+        // issues detected"). Only the admin API and admin panel are disallowed.
         $body = $custom ?: implode("\n", [
             'User-agent: *',
             "Disallow: {$base}/admin",
-            "Disallow: {$base}/api/",
+            "Disallow: {$base}/api/v1/admin/",
             "Disallow: {$base}/appointment/",
+            "Allow: {$base}/api/v1/",
             '',
             'Sitemap: '.url('sitemap.xml'),
         ]);
