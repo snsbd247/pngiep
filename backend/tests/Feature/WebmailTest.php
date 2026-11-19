@@ -74,13 +74,31 @@ class WebmailTest extends TestCase
         $this->assertDatabaseHas('activity_logs', ['action' => 'mailbox_created', 'subject_id' => $user->id]);
     }
 
-    public function test_existing_mailbox_is_only_linked(): void
+    public function test_existing_mailbox_is_only_linked_and_only_by_a_super_admin(): void
     {
+        // An Admin must not gain password-less access to existing mail by creating a user with that address.
         $this->actingAs($this->userWithRole('admin'))->postJson('/api/v1/admin/users', $this->payload('existing@pngiep.com'))
+            ->assertCreated()->assertJsonPath('meta.mailbox.status', 'error');
+        $this->assertNull(User::query()->where('email', 'existing@pngiep.com')->value('mailbox'));
+
+        User::query()->where('email', 'existing@pngiep.com')->forceDelete();
+        $this->actingAs($this->userWithRole('super-admin'))->postJson('/api/v1/admin/users', $this->payload('existing@pngiep.com'))
             ->assertCreated()->assertJsonPath('meta.mailbox.status', 'linked')->assertJsonMissingPath('meta.mailbox.password');
 
         Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'add_pop'));
         $this->assertSame('existing@pngiep.com', User::query()->where('email', 'existing@pngiep.com')->value('mailbox'));
+    }
+
+    public function test_only_a_super_admin_can_delete_a_mailbox_not_created_here(): void
+    {
+        $staff = $this->userWithRole('counsellor', ['email' => 'old@pngiep.com']);
+        $staff->forceFill(['mailbox' => 'old@pngiep.com', 'mailbox_linked_at' => now(), 'mailbox_created' => false])->save();
+
+        $this->actingAs($this->userWithRole('admin'))->deleteJson("/api/v1/admin/users/{$staff->id}/mailbox?delete=1")->assertForbidden();
+        Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'delete_pop'));
+
+        $this->actingAs($this->userWithRole('super-admin'))->deleteJson("/api/v1/admin/users/{$staff->id}/mailbox?delete=1")->assertOk();
+        Http::assertSent(fn (Request $r) => str_contains($r->url(), 'delete_pop'));
     }
 
     public function test_external_addresses_and_cpanel_errors_do_not_block_saving_the_user(): void
@@ -102,7 +120,7 @@ class WebmailTest extends TestCase
         $a = $this->userWithRole('counsellor', ['email' => 'a@pngiep.com']);
         $a->forceFill(['mailbox' => 'a@pngiep.com', 'mailbox_linked_at' => now()])->save();
         $b = $this->userWithRole('counsellor', ['email' => 'b@pngiep.com']);
-        $b->forceFill(['mailbox' => 'b@pngiep.com', 'mailbox_linked_at' => now()])->save();
+        $b->forceFill(['mailbox' => 'b@pngiep.com', 'mailbox_linked_at' => now(), 'mailbox_created' => true])->save();
 
         $this->actingAs($admin)->deleteJson("/api/v1/admin/users/{$a->id}")->assertOk();
         Http::assertNotSent(fn (Request $r) => str_contains($r->url(), 'delete_pop'));

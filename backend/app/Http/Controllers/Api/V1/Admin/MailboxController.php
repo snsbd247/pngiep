@@ -36,6 +36,11 @@ class MailboxController extends Controller
         Gate::authorize('update', $user);
         $delete = $request->boolean('delete');
 
+        // Mail that existed before the app linked it (not created here) can only be erased by a Super Admin.
+        if ($delete && ! $user->mailbox_created && ! $request->user()->isSuperAdmin()) {
+            return ApiResponse::error('Only a Super Admin can delete a mailbox that was not created from this panel.', 403);
+        }
+
         try {
             $mailboxes->unlink($user, $delete);
         } catch (RuntimeException $e) {

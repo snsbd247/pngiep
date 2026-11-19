@@ -37,6 +37,8 @@ const editSchema = withPasswordConfirmation(baseSchema.extend({ password: passwo
 const MAILBOX_HINTS = {
   available: { icon: CircleCheck, cls: 'text-emerald-600', text: (e) => `New mailbox ${e} will be created.` },
   exists: { icon: Link2, cls: 'text-sky-600', text: (e) => `Mailbox ${e} already exists and will be linked.` },
+  // Linking existing mail is Super Admin only (it gives password-less access to that mail).
+  exists_locked: { icon: Info, cls: 'text-amber-700', text: (e) => `Mailbox ${e} already exists. Only a Super Admin can link an existing mailbox.` },
   linked: { icon: Link2, cls: 'text-sky-600', text: (e) => `Linked to mailbox ${e}.` },
   external: { icon: Info, cls: 'text-slate-500', text: (_, d) => `Not a @${d} address: no mailbox is set up.` },
 }
@@ -79,7 +81,8 @@ function UserForm({ user, open, onClose, onMailboxPassword }) {
   const email = (useWatch({ control, name: 'email' }) ?? '').trim().toLowerCase()
   const status = useMailboxStatus(email, open && canMailbox)
   const linkedHere = user?.mailbox && user.mailbox === email
-  const mailboxStatus = linkedHere ? 'linked' : status.data?.status
+  const rawStatus = linkedHere ? 'linked' : status.data?.status
+  const mailboxStatus = rawStatus === 'exists' && !me?.is_super_admin ? 'exists_locked' : rawStatus
   const mailboxPossible = ['available', 'exists', 'linked'].includes(mailboxStatus)
   const hint = MAILBOX_HINTS[mailboxStatus]
 

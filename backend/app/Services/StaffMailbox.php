@@ -44,6 +44,13 @@ class StaffMailbox
 
         try {
             if ($this->cpanel->exists($email)) {
+                // Linking gives password-less Webmail access to mail that already exists (e.g. a
+                // director's mailbox). Only a Super Admin may do that; otherwise an Admin could
+                // create a user with that address and a password they know, and read the mail.
+                if (! auth()->user()?->isSuperAdmin()) {
+                    return ['status' => 'error', 'mailbox' => null,
+                        'error' => "{$email} already exists on the mail server. Only a Super Admin can link an existing mailbox."];
+                }
                 $this->link($user, $email, created: false);
 
                 return ['status' => 'linked', 'mailbox' => $email];
