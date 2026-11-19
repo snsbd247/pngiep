@@ -115,6 +115,7 @@
 | 2026-11-19 | **SEO**: React আর canonical/JSON-LD মুছে দেয় না (আগে Google এগুলো দেখত না), সব পেজে BreadcrumbList, LocalBusiness + PostalAddress, title ৬০ অক্ষরে (`seo_short_name`), `/search` noindex, ফাইল-ঠিকানায় 404, sitemap-এ হোমপেজ lastmod ও cookie ছাড়া উত্তর। গাইড: [SEO.md](SEO.md)। মোট ১১৯টা টেস্ট। |
 | 2026-11-19 | `99fc2c6` robots.txt পাবলিক API (`/api/v1/`) খোলা রাখে (Google রেন্ডার করতে পারত না, "Indexing request rejected")। `b6ddb52` Course schema-য় ফি/সময়কাল/ডিগ্রি; ডেমো কনটেন্ট চূড়ান্ত ডাটা হিসেবে চিহ্নমুক্ত। মোট ১২০টা টেস্ট। |
 | 2026-11-20 | `74bc785` মেনুতে **News** (হেডার + ফুটার)। `f6ea132` "Universities We Represent" সরাসরি Universities থেকে (লোগো + লিংক); Partners-এর ডুপ্লিকেট ভার্সিটি migration দিয়ে মোছা। হেডারে **About** dropdown (About Us, Services, Gallery)। সব `.md` `docs/`-এ, ডেপ্লয়ে বাদ। মোট ১২৩টা টেস্ট। |
+| 2026-11-20 | **মোবাইল রেসপন্সিভ**: ৩২০px ফোনে হেডার ২৫px বেরিয়ে পুরো পেজ পাশে সরত (লোগো `shrink`), মোবাইলে hero-র লেখার পেছনে হালকা আস্তর, দেশের কার্ডে পুরো নাম, Pathways/feature কার্ড আইকন-পাশে (কম লম্বা), ভার্সিটির লোগো carousel-এ পরের কার্ড উঁকি দেয়। DevTools Protocol দিয়ে ৩২০/৩৭৫px-এ ১৭টা পেজ যাচাই, কোথাও horizontal scroll নেই। |
 
 ### রিভিউয়ের সমস্যাগুলোর বর্তমান অবস্থা (৩ নম্বর অংশের টেবিল অনুযায়ী)
 
