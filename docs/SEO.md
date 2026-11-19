@@ -21,7 +21,9 @@
 ## ২. কোম্পানির করণীয় (সবচেয়ে বেশি প্রভাব এগুলোর)
 
 ### এখনই (একবার)
-1. **Google Search Console** (ইতিমধ্যে যুক্ত): Sitemaps-এ `https://pngiep.com/sitemap.xml` আবার Submit করুন। সার্ভার ১৯ নভেম্বর নতুন IP-তে গেছে; "Couldn't fetch" সাধারণত DNS আপডেটের পরে নিজেই ঠিক হয়। কয়েক দিন পরেও থাকলে URL Inspection › Test live URL দিয়ে sitemap পরীক্ষা করুন।
+0. **ডেমো কনটেন্ট সরান**: লাইভ সাইটে এখনো ৩০টা ডেমো কোর্স (নমুনা ফি), ৬টা বানানো success story, ৩টা testimonial, ৮টা ডেমো ব্লগ ও ডেমো গ্যালারি আছে (`php artisan app:demo-content list`)। আসল কনটেন্ট দিয়ে বদলে ডেমো মুছুন (`php artisan app:demo-content remove`)। বানানো গল্প বা রিভিউ বিশ্বাসযোগ্যতা আর র‍্যাংকিং দুটোই কমায়।
+1. **robots.txt আপডেট Google-কে জানান**: Search Console › Settings › robots.txt › "Request a recrawl" (Google robots.txt ২৪ ঘণ্টা পর্যন্ত ক্যাশে রাখে)। তারপর URL Inspection › Test live URL › Request indexing।
+2. **Google Search Console** (ইতিমধ্যে যুক্ত): Sitemaps-এ `https://pngiep.com/sitemap.xml` আবার Submit করুন। সার্ভার ১৯ নভেম্বর নতুন IP-তে গেছে; "Couldn't fetch" সাধারণত DNS আপডেটের পরে নিজেই ঠিক হয়। কয়েক দিন পরেও থাকলে URL Inspection › Test live URL দিয়ে sitemap পরীক্ষা করুন।
 2. **Google Business Profile** (business.google.com): "PNG International Education Portal", ক্যাটাগরি *Educational consultant*, ঠিক সেই ঠিকানা/ফোন যা সাইটে আছে, অফিস সময়, ছবি, ওয়েবসাইট লিংক। "study abroad Port Moresby"-এর মতো স্থানীয় সার্চে এটাই সবচেয়ে বড় প্রভাব ফেলে।
 3. **Bing Webmaster Tools**: Search Console থেকে ইমপোর্ট করুন (Bing আর DuckDuckGo-র জন্য)।
 4. **PageSpeed Insights** (pagespeed.web.dev): হোম, একটা দেশের পেজ আর একটা কোর্স পেজ মাপুন; মোবাইলে ৭০-এর নিচে হলে আমাকে ফলাফল দিন।
