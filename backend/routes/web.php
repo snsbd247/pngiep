@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\SpaController;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Cookie\Middleware\EncryptCookies;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +18,16 @@ use Illuminate\Support\Facades\Route;
 | needing a Node.js server.
 */
 
-Route::get('robots.txt', [SpaController::class, 'robots']);
-Route::get('favicon.ico', [SpaController::class, 'favicon']);
-Route::get('sitemap.xml', [SpaController::class, 'sitemap']);
+// Crawler files: no session or XSRF cookies (a cacheable response must not set cookies,
+// and search engines do not need them).
+Route::withoutMiddleware([
+    StartSession::class, ShareErrorsFromSession::class, ValidateCsrfToken::class,
+    AddQueuedCookiesToResponse::class, EncryptCookies::class,
+])->group(function () {
+    Route::get('robots.txt', [SpaController::class, 'robots']);
+    Route::get('favicon.ico', [SpaController::class, 'favicon']);
+    Route::get('sitemap.xml', [SpaController::class, 'sitemap']);
+});
 
 // Canonical destination URLs are /study-in-{slug}.
 Route::get('destinations/{slug}', [SpaController::class, 'destinationRedirect'])->where('slug', '[a-z0-9-]+');
